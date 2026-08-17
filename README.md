@@ -102,7 +102,7 @@ guardian-monitor/
 
 ## Versão
 
-Versão atual: **1.3.0**
+Versão atual: **1.5.0**
 
 ## Licença
 
