@@ -94,13 +94,15 @@ guardian-monitor/
 ├── icon128.png
 ├── README.md
 ├── PRIVACY.md
+├── SECURITY.md
+├── CHANGELOG.md
 ├── LICENSE
 └── .gitignore
 ```
 
 ## Versão
 
-Versão atual: **1.5.0**
+Versão atual: **1.3.0**
 
 ## Licença
 
