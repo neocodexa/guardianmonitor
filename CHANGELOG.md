@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1 - 2026-08-18
+
+- Ajusta o histórico de atividade para exibir todas as colunas, incluindo o status, sem rolagem horizontal.
+- Corrige o alinhamento do Guardian Risk Score para manter a pontuação junto de `/ 100`.
+
 ## Próxima versão
 
 - Adiciona o Guardian Risk Engine com pontuações padronizadas de 0 a 100.
