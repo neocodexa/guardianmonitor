@@ -15,3 +15,39 @@ aside .brand-logo {
   border-radius: 20px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
 }
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: color .15s ease, transform .15s ease;
+}
+
+.github-link:hover {
+  color: #60a5fa;
+  transform: translateY(-1px);
+}
+
+.github-link svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  fill: currentColor;
+}
+
+.popup .github-link {
+  margin-top: 8px;
+  color: #718096;
+}
+
+.credit .github-link {
+  display: flex;
+  width: max-content;
+  margin-top: 8px;
+  color: #dce6f5;
+}

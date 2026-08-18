@@ -7,6 +7,8 @@
 - Adiciona manifesto e empacotamento específicos para Firefox, mantendo o pacote Chromium separado.
 - Adapta background, armazenamento e notificações para as diferenças entre Firefox e Chromium.
 - Organiza manifestos, scripts e pacotes distribuíveis em diretórios separados por navegador.
+- Corrige os separadores de caminho internos dos ZIPs para compatibilidade com o validador da Mozilla.
+- Adiciona acesso ao repositório do projeto no GitHub pelo painel e pelo popup da extensão.
 
 ## 1.5.1 - 2026-08-18
 
