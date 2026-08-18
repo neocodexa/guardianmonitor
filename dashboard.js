@@ -20,6 +20,15 @@ Object.assign(I18N.es,{appearance:"Apariencia",appearanceText:"Elige cómo se de
 Object.assign(I18N["pt-BR"],{developedBy:"Dev pela"});
 Object.assign(I18N.en,{developedBy:"By"});
 Object.assign(I18N.es,{developedBy:"Por"});
+Object.assign(I18N["pt-BR"],{
+  navReplay:"Risk Replay",titleReplay:"Risk Replay",riskReplay:"Risk Replay",replayDescription:"Reconstrói incidentes prováveis usando somente eventos já armazenados localmente.",period:"Período",last24Hours:"Últimas 24h",last7Days:"7 dias",last30Days:"30 dias",noIncidents:"Nenhum incidente encontrado neste período.",incident:"Incidente",eventsCount:"eventos",duration:"duração",replayIncident:"Reproduzir incidente",timeline:"Linha do tempo",whyScore:"Por que este incidente recebeu essa pontuação?",known:"O que sabemos",unknown:"O que não sabemos",knownEvents:"Estes eventos foram observados pelo Guardian Monitor.",knownTime:"Os eventos agrupados ocorreram próximos no tempo ou compartilham sinais.",knownSignals:"Determinados metadados foram classificados como risco.",unknownExecuted:"Não sabemos se um arquivo baixado foi executado.",unknownCausal:"Não sabemos se os eventos possuem relação causal.",unknownCompromise:"Não sabemos se houve comprometimento real.",exportIncidentJson:"Exportar incidente JSON",exportIncidentHtml:"Exportar relatório HTML",closeReplay:"Fechar",derivedIncident:"Agrupamento derivado do histórico",storedIncident:"Agrupamento identificado nos eventos",relation:"Relação com o evento anterior",relationStart:"Evento inicial do incidente.",relationIncidentId:"Mesmo identificador de incidente.",relationDomain:"Domínio igual ou relacionado.",relationItem:"Mesmo item observado.",relationExtension:"Mesma extensão.",relationTime:"Ocorreram próximos no tempo",seconds:"segundos",noExplanation:"Nenhuma explicação adicional registrada.",incidentScoreMethod:"A pontuação combina os riscos dos eventos com peso decrescente, sem afirmar causalidade.",reportPrivacy:"Relatório criado localmente somente com eventos já armazenados."
+});
+Object.assign(I18N.en,{
+  navReplay:"Risk Replay",titleReplay:"Risk Replay",riskReplay:"Risk Replay",replayDescription:"Reconstructs likely incidents using only events already stored locally.",period:"Period",last24Hours:"Last 24 hours",last7Days:"7 days",last30Days:"30 days",noIncidents:"No incidents found in this period.",incident:"Incident",eventsCount:"events",duration:"duration",replayIncident:"Replay incident",timeline:"Timeline",whyScore:"Why did this incident receive this score?",known:"What we know",unknown:"What we do not know",knownEvents:"These events were observed by Guardian Monitor.",knownTime:"Grouped events occurred close in time or share signals.",knownSignals:"Certain metadata was classified as risk.",unknownExecuted:"We do not know whether a downloaded file was executed.",unknownCausal:"We do not know whether the events are causally related.",unknownCompromise:"We do not know whether a real compromise occurred.",exportIncidentJson:"Export incident JSON",exportIncidentHtml:"Export HTML report",closeReplay:"Close",derivedIncident:"Grouping derived from history",storedIncident:"Grouping identified in stored events",relation:"Relation to the previous event",relationStart:"Initial event in the incident.",relationIncidentId:"Same incident identifier.",relationDomain:"Same or related domain.",relationItem:"Same observed item.",relationExtension:"Same extension.",relationTime:"Occurred close in time",seconds:"seconds",noExplanation:"No additional explanation was recorded.",incidentScoreMethod:"The score combines event risks with decreasing weight and does not assert causality.",reportPrivacy:"Report created locally using only events already stored."
+});
+Object.assign(I18N.es,{
+  navReplay:"Risk Replay",titleReplay:"Risk Replay",riskReplay:"Risk Replay",replayDescription:"Reconstruye incidentes probables usando solamente eventos ya almacenados localmente.",period:"Período",last24Hours:"Últimas 24 h",last7Days:"7 días",last30Days:"30 días",noIncidents:"No se encontraron incidentes en este período.",incident:"Incidente",eventsCount:"eventos",duration:"duración",replayIncident:"Reproducir incidente",timeline:"Línea de tiempo",whyScore:"¿Por qué este incidente recibió esta puntuación?",known:"Lo que sabemos",unknown:"Lo que no sabemos",knownEvents:"Estos eventos fueron observados por Guardian Monitor.",knownTime:"Los eventos agrupados ocurrieron cerca en el tiempo o comparten señales.",knownSignals:"Determinados metadatos fueron clasificados como riesgo.",unknownExecuted:"No sabemos si se ejecutó un archivo descargado.",unknownCausal:"No sabemos si los eventos tienen una relación causal.",unknownCompromise:"No sabemos si hubo un compromiso real.",exportIncidentJson:"Exportar incidente JSON",exportIncidentHtml:"Exportar informe HTML",closeReplay:"Cerrar",derivedIncident:"Agrupación derivada del historial",storedIncident:"Agrupación identificada en los eventos",relation:"Relación con el evento anterior",relationStart:"Evento inicial del incidente.",relationIncidentId:"Mismo identificador de incidente.",relationDomain:"Dominio igual o relacionado.",relationItem:"Mismo elemento observado.",relationExtension:"Misma extensión.",relationTime:"Ocurrieron cerca en el tiempo",seconds:"segundos",noExplanation:"No se registró una explicación adicional.",incidentScoreMethod:"La puntuación combina los riesgos de los eventos con peso decreciente, sin afirmar causalidad.",reportPrivacy:"Informe creado localmente solo con eventos ya almacenados."
+});
 const REASON_MESSAGES={
   en:{executable_type:"The file type can execute code.",archive_type:"The archive may contain other files.",double_extension:"The file has a potentially misleading double extension.",unencrypted_http:"The download originated over unencrypted HTTP.",encrypted_https:"The download originated over HTTPS.",mime_mismatch:"The MIME type does not appear to match the extension.",deceptive_name:"The filename may be misleading.",combo_cookies_all_urls:"Cookies combined with broad site access deserve review.",combo_scripting_all_urls:"Scripts combined with broad site access increase capability.",combo_credentials_pages:"The combination enables broad interaction with pages and sessions.",combo_proxy_requests:"Proxy combined with request observation deserves review.",context_new:"The extension is new compared with the local baseline.",context_new_permissions:"The extension received new permissions.",context_enabled:"The extension was recently enabled.",context_version_changed:"The extension version changed.",context_stable_baseline:"The extension is known and unchanged in the local baseline.",page_http:"The page containing the password form uses unencrypted HTTP.",action_http:"The form submits over unencrypted HTTP.",cross_domain_action:"The destination differs from the page domain.",ip_target:"The form points to an IP address.",punycode_domain:"The destination uses a Punycode internationalized domain.",iframe_form:"The password form is inside an iframe.",unknown_target:"The destination domain could not be validated.",multiple_credential_signals:"Multiple potential exposure signals were observed together."},
   es:{executable_type:"El tipo de archivo puede ejecutar código.",archive_type:"El archivo comprimido puede contener otros archivos.",double_extension:"El archivo tiene una doble extensión potencialmente engañosa.",unencrypted_http:"La descarga se originó mediante HTTP sin cifrar.",encrypted_https:"La descarga se originó mediante HTTPS.",mime_mismatch:"El tipo MIME no parece coincidir con la extensión.",deceptive_name:"El nombre del archivo puede ser engañoso.",combo_cookies_all_urls:"Las cookies combinadas con acceso amplio a sitios merecen revisión.",combo_scripting_all_urls:"Los scripts combinados con acceso amplio aumentan la capacidad.",combo_credentials_pages:"La combinación permite una interacción amplia con páginas y sesiones.",combo_proxy_requests:"El proxy combinado con la observación de solicitudes merece revisión.",context_new:"La extensión es nueva respecto a la línea base local.",context_new_permissions:"La extensión recibió nuevos permisos.",context_enabled:"La extensión fue activada recientemente.",context_version_changed:"La versión de la extensión cambió.",context_stable_baseline:"La extensión es conocida y no cambió en la línea base local.",page_http:"La página con el formulario de contraseña usa HTTP sin cifrar.",action_http:"El formulario se envía mediante HTTP sin cifrar.",cross_domain_action:"El destino difiere del dominio de la página.",ip_target:"El formulario apunta a una dirección IP.",punycode_domain:"El destino usa un dominio internacionalizado Punycode.",iframe_form:"El formulario de contraseña está dentro de un iframe.",unknown_target:"No se pudo validar el dominio de destino.",multiple_credential_signals:"Se observaron juntas varias señales de posible exposición."}
@@ -27,10 +36,12 @@ const REASON_MESSAGES={
 let currentLanguage="pt-BR";
 function t(key){return I18N[currentLanguage]?.[key]||I18N["pt-BR"][key]||key}
 function locale(){return currentLanguage==="en"?"en-US":currentLanguage==="es"?"es-ES":"pt-BR"}
-function applyTranslations(){document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-i18n]").forEach(node=>{node.textContent=t(node.dataset.i18n)});document.querySelectorAll("[data-i18n-placeholder]").forEach(node=>{node.placeholder=t(node.dataset.i18nPlaceholder)});const active=document.querySelector(".nav.active");if(active){const titles={history:"titleHistory",center:"titleCenter",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};document.getElementById("viewTitle").textContent=t(titles[active.dataset.view]||"titleHistory")}}
+function applyTranslations(){document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-i18n]").forEach(node=>{node.textContent=t(node.dataset.i18n)});document.querySelectorAll("[data-i18n-placeholder]").forEach(node=>{node.placeholder=t(node.dataset.i18nPlaceholder)});const active=document.querySelector(".nav.active");if(active){const titles={history:"titleHistory",center:"titleCenter",replay:"titleReplay",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};document.getElementById("viewTitle").textContent=t(titles[active.dataset.view]||"titleHistory")}}
 let events = [];
 let settings = {};
 let browserExtensions = [];
+let replayIncidents = [];
+let selectedReplayId = null;
 const DEFAULT_SENSITIVE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx", "csv", "txt", "key", "pem", "p12", "pfx", "json", "env", "sql", "zip", "rar", "7z"];
 const CREDENTIAL_TYPES = new Set(["credential_form_risk", "credential_extension_risk"]);
 const SECURITY_TYPES = new Set(["extension_new", "extension_permissions_changed", "extension_enabled", "extension_disabled", "extension_updated", "extension_removed", "security_audit", "download_scan", ...CREDENTIAL_TYPES]);
@@ -208,6 +219,7 @@ function render() {
     body.append(tr);
   });
   renderSecurityCenter();
+  renderRiskReplay();
 }
 
 function renderSecurityCenter() {
@@ -237,6 +249,155 @@ function renderSecurityCenter() {
     item.append(heading, element("p", "", eventDetail(event)), element("time", "", new Date(event.timestamp).toLocaleString(locale())));
     feed.append(item);
   });
+}
+
+function replayRelationText(relation) {
+  if (!relation || relation.code === "start") return t("relationStart");
+  const labels = [];
+  if (relation.details?.includes("incidentId")) labels.push(t("relationIncidentId"));
+  if (relation.details?.includes("domain")) labels.push(t("relationDomain"));
+  if (relation.details?.includes("item")) labels.push(t("relationItem"));
+  if (relation.details?.includes("extension")) labels.push(t("relationExtension"));
+  labels.push(`${t("relationTime")}: ${relation.gapSeconds || 0} ${t("seconds")}.`);
+  return labels.join(" ");
+}
+
+function replayEventExplanation(event) {
+  const parts = [];
+  if (event.note) parts.push(event.note);
+  if (event.danger) parts.push(`${t("chromium")}: ${event.danger}`);
+  if (event.reasons?.length) parts.push(event.reasons.map(reasonText).filter(Boolean).join("; "));
+  return parts.join(" · ") || t("noExplanation");
+}
+
+function replayIncidentName(incident) {
+  const index = replayIncidents.findIndex(item => item.id === incident.id);
+  return `${t("incident")} #${index < 0 ? 1 : index + 1}`;
+}
+
+function replayFilename(incident, extension) {
+  const safeId = String(incident.id || "incident").replace(/[^a-zA-Z0-9._-]/g, "-").slice(0, 80);
+  return `guardian-risk-replay-${safeId}.${extension}`;
+}
+
+function exportReplayJson(incident) {
+  const payload = GuardianRiskReplay.exportObject(incident);
+  download(replayFilename(incident, "json"), JSON.stringify(payload, null, 2), "application/json");
+}
+
+function exportReplayHtml(incident) {
+  const labels = {
+    riskReplay: t("riskReplay"), incident: t("incident"), timeline: t("timeline"), why: t("whyScore"), known: t("known"), unknown: t("unknown"),
+    knownEvents: t("knownEvents"), knownTime: t("knownTime"), knownSignals: t("knownSignals"), unknownExecuted: t("unknownExecuted"), unknownCausal: t("unknownCausal"), unknownCompromise: t("unknownCompromise"),
+    low: t("lowLevel"), guarded: t("guardedLevel"), medium: t("mediumLevel"), high: t("highLevel"), critical: t("criticalLevel")
+  };
+  const html = GuardianRiskReplay.exportHtml(incident, { locale: locale(), labels, typeLabel, reasonLabel: reason => reasonText(reason).replace(/^\+\d+\s+/, ""), relationLabel: replayRelationText });
+  download(replayFilename(incident, "html"), html, "text/html;charset=utf-8");
+}
+
+function renderReplayDetail() {
+  const panel = $("#replayDetail");
+  const incident = replayIncidents.find(item => item.id === selectedReplayId);
+  clear(panel);
+  if (!incident) {
+    panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  const header = element("div", "replay-detail-head");
+  const heading = element("div");
+  heading.append(element("h3", "", replayIncidentName(incident)));
+  const source = element("p", "", incident.derived ? t("derivedIncident") : t("storedIncident"));
+  heading.append(source, element("p", "", `${new Date(incident.startTimestamp).toLocaleString(locale())} · ${incident.events.length} ${t("eventsCount")} · ${t("duration")}: ${incident.durationSeconds} ${t("seconds")}`));
+  const actions = element("div", "replay-actions");
+  const jsonButton = element("button", "", t("exportIncidentJson"));
+  jsonButton.type = "button";
+  jsonButton.addEventListener("click", () => exportReplayJson(incident));
+  const htmlButton = element("button", "", t("exportIncidentHtml"));
+  htmlButton.type = "button";
+  htmlButton.addEventListener("click", () => exportReplayHtml(incident));
+  const closeButton = element("button", "", t("closeReplay"));
+  closeButton.type = "button";
+  closeButton.addEventListener("click", () => {
+    selectedReplayId = null;
+    renderReplayDetail();
+  });
+  actions.append(jsonButton, htmlButton, closeButton);
+  header.append(heading, actions);
+  panel.append(header);
+
+  const scoreLine = element("p", "incident-score", `${t("guardianRiskScore")}: ${incident.riskScore}/100 · ${t({ low:"lowLevel", guarded:"guardedLevel", medium:"mediumLevel", high:"highLevel", critical:"criticalLevel" }[incident.riskLevel])}`);
+  panel.append(scoreLine, element("p", "", t("incidentScoreMethod")), element("h3", "", t("timeline")));
+
+  const timeline = element("ol", "replay-timeline");
+  incident.events.forEach(event => {
+    const item = element("li", "replay-event");
+    const time = element("time", "", new Date(event.timestamp).toLocaleTimeString(locale()));
+    time.title = new Date(event.timestamp).toLocaleString(locale());
+    item.append(time, element("h4", "", typeLabel(event.type)));
+    const context = [event.domain, event.targetDomain, event.item].filter(Boolean).join(" · ");
+    if (context) item.append(element("p", "", context));
+    item.append(riskNode(event.riskScore), element("p", "", replayEventExplanation(event)));
+    item.append(element("small", "replay-relation", `${t("relation")}: ${replayRelationText(event.relationToPrevious)}`));
+    timeline.append(item);
+  });
+  panel.append(timeline, element("h3", "", t("whyScore")));
+
+  const reasons = element("ul", "replay-reasons");
+  if (!incident.reasons.length) reasons.append(element("li", "empty", t("noExplanation")));
+  incident.reasons.forEach(reason => {
+    const item = element("li");
+    item.append(element("strong", "", `+${reason.score} `), document.createTextNode(reasonText(reason).replace(/^\+\d+\s+/, "")));
+    reasons.append(item);
+  });
+  panel.append(reasons);
+
+  const facts = element("div", "replay-facts");
+  const known = element("section");
+  known.append(element("h4", "", t("known")));
+  const knownList = element("ul");
+  ["knownEvents", "knownTime", "knownSignals"].forEach(key => knownList.append(element("li", "", t(key))));
+  known.append(knownList);
+  const unknown = element("section");
+  unknown.append(element("h4", "", t("unknown")));
+  const unknownList = element("ul");
+  ["unknownExecuted", "unknownCausal", "unknownCompromise"].forEach(key => unknownList.append(element("li", "", t(key))));
+  unknown.append(unknownList);
+  facts.append(known, unknown);
+  panel.append(facts, element("p", "tiny", t("reportPrivacy")));
+}
+
+function renderRiskReplay() {
+  const range = Number($("#replayRange")?.value || 1);
+  replayIncidents = GuardianRiskReplay.deriveIncidents(events, { days: range });
+  const list = $("#replayList");
+  clear(list);
+  if (!replayIncidents.length) {
+    list.append(element("div", "panel wide empty", t("noIncidents")));
+    selectedReplayId = null;
+    renderReplayDetail();
+    return;
+  }
+
+  replayIncidents.forEach(incident => {
+    const card = element("article", "incident-card");
+    const description = element("div");
+    description.append(element("h3", "", replayIncidentName(incident)), element("p", "", `${new Date(incident.startTimestamp).toLocaleString(locale())} · ${incident.events.length} ${t("eventsCount")}`));
+    const meta = element("div", "incident-meta");
+    meta.append(element("strong", "incident-score", `${incident.riskScore}/100`), element("span", `level-${incident.riskLevel}`, t({ low:"lowLevel", guarded:"guardedLevel", medium:"mediumLevel", high:"highLevel", critical:"criticalLevel" }[incident.riskLevel])));
+    const button = element("button", "primary", t("replayIncident"));
+    button.type = "button";
+    button.addEventListener("click", () => {
+      selectedReplayId = incident.id;
+      renderReplayDetail();
+      $("#replayDetail").scrollIntoView({ block: "start" });
+    });
+    card.append(description, meta, button);
+    list.append(card);
+  });
+  if (selectedReplayId && !replayIncidents.some(incident => incident.id === selectedReplayId)) selectedReplayId = null;
+  renderReplayDetail();
 }
 
 function renderDomains() {
@@ -419,12 +580,16 @@ $$('.nav').forEach(button => button.addEventListener("click", () => {
   $$('.nav,.view').forEach(item => item.classList.remove("active"));
   button.classList.add("active");
   $(`#${button.dataset.view}`).classList.add("active");
-  const titles={history:"titleHistory",center:"titleCenter",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};
+  const titles={history:"titleHistory",center:"titleCenter",replay:"titleReplay",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};
   $("#viewTitle").textContent=t(titles[button.dataset.view]||"titleHistory");
 }));
 
 $("#search").addEventListener("input", render);
 $("#filter").addEventListener("change", render);
+$("#replayRange").addEventListener("change", () => {
+  selectedReplayId = null;
+  renderRiskReplay();
+});
 
 $("#addDomain").addEventListener("click", async () => {
   const domain = normalizeDomain($("#domainInput").value);
@@ -439,7 +604,7 @@ $("#addDomain").addEventListener("click", async () => {
   render();
 });
 
-$("#language").addEventListener("change",async()=>{settings.language=$("#language").value;currentLanguage=settings.language;await saveSettings();applyTranslations();render();renderDomains();renderExtensions();await loadExtensions();});
+$("#language").addEventListener("change",async()=>{settings.language=$("#language").value;currentLanguage=settings.language;await saveSettings();applyTranslations();render();renderDomains();renderExtensions();renderRiskReplay();await loadExtensions();});
 
 $("#saveSettings").addEventListener("click", async () => {
   settings.alerts = $("#alerts").checked;

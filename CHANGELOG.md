@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.6.0 - 2026-08-18
+
+- Adiciona o Risk Replay para reconstrução visual de incidentes a partir do histórico local.
+- Agrupa eventos por `incidentId` quando disponível e deriva agrupamentos legados por proximidade temporal e sinais compartilhados.
+- Exibe timeline, relações entre eventos, pontuação combinada, motivos, fatos conhecidos e limitações da análise.
+- Adiciona filtros de 24 horas, 7 dias e 30 dias.
+- Adiciona exportação de incidente em JSON e relatório HTML local sem scripts ou recursos remotos.
+- Inclui traduções do Risk Replay em português, inglês e espanhol.
+
 ## 1.5.2 - 2026-08-18
 
 - Substitui as iniciais `GM` pelo novo logo do Guardian Monitor no painel e no popup da extensão.

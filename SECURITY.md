@@ -12,6 +12,8 @@ Guardian Monitor usa Manifest V3, Content Security Policy restritiva e processam
 
 O Guardian Risk Engine é heurístico. Uma pontuação elevada não confirma malware, invasão, roubo de credenciais ou comprometimento de sessão.
 
+O Risk Replay não interpreta correlação como causalidade e não coleta dados adicionais. A exportação HTML não contém scripts nem recursos remotos, e todo conteúdo proveniente do histórico é codificado antes de ser inserido no documento para impedir injeção de HTML.
+
 ## Escopo
 
 A extensão não substitui antivírus, proteção do sistema operacional, autenticação multifator nem investigação forense. A permissão opcional `management` é necessária apenas para a auditoria local de extensões.

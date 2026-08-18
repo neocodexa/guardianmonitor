@@ -28,6 +28,8 @@ O histórico é limitado a 2.000 eventos.
 
 O projeto não possui mecanismo automático de envio ou compartilhamento do histórico. A exportação em JSON ou CSV acontece somente quando o usuário solicita pelo painel.
 
+O Risk Replay deriva incidentes exclusivamente dos eventos já armazenados localmente. Ele não cria coleta adicional. As exportações JSON e HTML de incidentes acontecem somente por ação do usuário e permanecem no dispositivo.
+
 ## Exclusão
 
 O histórico pode ser apagado pelo botão **Apagar histórico** no painel. A remoção da extensão também remove os dados locais associados conforme o comportamento do navegador.

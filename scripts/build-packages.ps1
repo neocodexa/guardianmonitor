@@ -14,6 +14,8 @@ $packageFiles = @(
   "popup.html",
   "popup.js",
   "risk-engine.js",
+  "risk-replay.css",
+  "risk-replay.js",
   "style.css"
 )
 

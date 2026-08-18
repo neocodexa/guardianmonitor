@@ -1,0 +1,205 @@
+.replay-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.replay-header h3,
+.replay-header p {
+  margin: 0;
+}
+
+.replay-header p {
+  margin-top: 6px;
+  color: #78849a;
+}
+
+.replay-header label {
+  min-width: 210px;
+  color: #657188;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.replay-header select {
+  margin: 6px 0 0;
+}
+
+.incident-list {
+  display: grid;
+  gap: 14px;
+}
+
+.incident-card {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
+  border: 1px solid #e1e7ef;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, .04);
+}
+
+.incident-card h3,
+.incident-card p {
+  margin: 0;
+}
+
+.incident-card p {
+  margin-top: 5px;
+  color: #778399;
+  font-size: 15px;
+}
+
+.incident-meta {
+  text-align: right;
+}
+
+.incident-score {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.replay-detail {
+  margin-top: 20px;
+}
+
+.replay-detail[hidden] {
+  display: none;
+}
+
+.replay-detail-head,
+.replay-actions,
+.replay-facts {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.replay-actions {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.replay-timeline {
+  list-style: none;
+  margin: 24px 0;
+  padding: 0;
+}
+
+.replay-event {
+  position: relative;
+  margin-left: 10px;
+  padding: 0 0 26px 28px;
+  border-left: 3px solid #3b82f6;
+}
+
+.replay-event::before {
+  position: absolute;
+  top: 3px;
+  left: -8px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #2563eb;
+  content: "";
+}
+
+.replay-event:last-child {
+  padding-bottom: 0;
+}
+
+.replay-event time,
+.replay-event small {
+  display: block;
+  color: #7b8799;
+  font-size: 14px;
+}
+
+.replay-event h4,
+.replay-event p {
+  margin: 5px 0;
+}
+
+.replay-relation {
+  margin-top: 8px !important;
+  color: #526078;
+  font-size: 14px;
+}
+
+.replay-reasons {
+  display: grid;
+  gap: 8px;
+  padding-left: 22px;
+}
+
+.replay-reasons strong {
+  color: #a44f00;
+}
+
+.replay-facts > section {
+  flex: 1;
+  padding: 18px;
+  border: 1px solid #e1e7ef;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.replay-facts h4 {
+  margin-top: 0;
+}
+
+html[data-theme="dark"] .incident-card,
+html[data-theme="dark"] .replay-facts > section {
+  border-color: #4b525d;
+  background: #30353d;
+}
+
+html[data-theme="dark"] .replay-header p,
+html[data-theme="dark"] .incident-card p,
+html[data-theme="dark"] .replay-event time,
+html[data-theme="dark"] .replay-event small,
+html[data-theme="dark"] .replay-relation {
+  color: #aab4c4;
+}
+
+html[data-theme="dark"] .replay-event::before {
+  border-color: #343941;
+}
+
+@media (max-width: 850px) {
+  .replay-header,
+  .replay-detail-head,
+  .replay-facts {
+    display: block;
+  }
+
+  .replay-header label {
+    display: block;
+    margin-top: 16px;
+  }
+
+  .incident-card {
+    grid-template-columns: 1fr;
+  }
+
+  .incident-meta {
+    text-align: left;
+  }
+
+  .replay-actions {
+    justify-content: flex-start;
+    margin-top: 14px;
+  }
+
+  .replay-facts > section + section {
+    margin-top: 12px;
+  }
+}

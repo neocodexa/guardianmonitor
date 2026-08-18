@@ -8,6 +8,7 @@ O objetivo do projeto é ajudar o usuário a perceber atividades que merecem rev
 
 - Guardian Risk Engine local e reutilizável para downloads, extensões e formulários de credenciais.
 - Guardian Risk Score de 0 a 100 com níveis Baixo, Atenção, Moderado, Alto e Crítico.
+- Risk Replay com agrupamento local de eventos correlacionados, timeline, explicações e exportação de incidentes.
 - Central de Segurança com indicadores por categoria e explicação dos sinais que contribuíram para cada evento.
 - Registro de arquivos selecionados em campos de upload.
 - Registro de tentativas de envio por formulários HTML.
@@ -79,6 +80,18 @@ Os eventos são separados em downloads, extensões, credenciais e outros. Dentro
 
 Ela não consegue provar que um servidor recebeu ou armazenou um arquivo, detectar roubo de senhas ou cookies por malware, detectar acesso a uma conta feito em outro dispositivo, observar atividades anteriores à instalação ou substituir antivírus e ferramentas de segurança do sistema operacional. A classificação de downloads é heurística: risco alto significa que existem sinais relevantes, não que malware foi confirmado.
 
+## Risk Replay
+
+O Risk Replay transforma eventos de risco já armazenados em incidentes visuais. Nenhum dado adicional é coletado ou persistido para realizar o agrupamento.
+
+Cada incidente exportado usa `schemaVersion: 1` e contém um identificador estável, início, fim, duração, Guardian Risk Score combinado, nível, motivos e a sequência normalizada de eventos. Cada evento da sequência inclui horário, tipo, domínio, destino, item, pontuação, explicações e sua relação observável com o evento anterior.
+
+Eventos que já possuem `incidentId` são agrupados por esse identificador. Eventos antigos sem `incidentId` recebem um identificador determinístico iniciado por `legacy-` e são agrupados quando ocorrem em uma janela de até dois minutos e compartilham domínio, item ou extensão, ou quando são eventos de risco próximos. Esse agrupamento indica correlação temporal e técnica, não relação causal.
+
+A pontuação do incidente combina as pontuações dos eventos em ordem decrescente, reduzindo progressivamente o peso dos eventos adicionais. O resultado ajuda na priorização, mas não confirma execução de arquivos, causalidade entre eventos ou comprometimento real.
+
+As exportações JSON e HTML são geradas localmente. O relatório HTML não contém JavaScript, dependências ou recursos remotos. Todo conteúdo originado dos eventos passa por escaping de HTML antes de ser inserido no relatório.
+
 ## Instalação para desenvolvimento
 
 1. Clone ou baixe este repositório.
@@ -107,12 +120,14 @@ guardian-monitor/
 │   └── build-packages.ps1
 ├── dist/
 │   ├── chromium/
-│   │   └── guardian-monitor-chromium-1.5.2.zip
+│   │   └── guardian-monitor-chromium-1.6.0.zip
 │   └── firefox/
-│       └── guardian-monitor-firefox-1.5.2.zip
+│       └── guardian-monitor-firefox-1.6.0.zip
 ├── background.js
 ├── content.js
 ├── risk-engine.js
+├── risk-replay.js
+├── risk-replay.css
 ├── popup.html
 ├── popup.js
 ├── dashboard.html
@@ -130,7 +145,7 @@ guardian-monitor/
 
 ## Versão
 
-Versão atual: **1.5.2**
+Versão atual: **1.6.0**
 
 ## Licença
 
