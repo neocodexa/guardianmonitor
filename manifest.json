@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Guardian Monitor",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Monitora uploads, downloads, extensões e sinais de risco à sessão e credenciais, com alertas locais e privacidade por padrão.",
   "minimum_chrome_version": "102",
   "permissions": [

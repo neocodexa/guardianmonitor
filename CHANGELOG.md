@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.2 - 2026-08-18
+
+- Substitui as iniciais `GM` pelo novo logo do Guardian Monitor no painel e no popup da extensão.
+- Atualiza os ícones utilizados pelo navegador e adiciona a arte do logo em alta resolução.
+
 ## 1.5.1 - 2026-08-18
 
 - Ajusta o histórico de atividade para exibir todas as colunas, incluindo o status, sem rolagem horizontal.

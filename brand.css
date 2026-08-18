@@ -1,0 +1,17 @@
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  display: block;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(29, 78, 216, .28);
+}
+
+aside .brand-logo {
+  width: 72px;
+  height: 72px;
+  flex-basis: 72px;
+  border-radius: 20px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
+}
