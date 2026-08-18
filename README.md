@@ -109,6 +109,8 @@ As exportações JSON e HTML são geradas localmente. O relatório HTML não con
 
 O script gera pacotes separados em `dist/chromium` e `dist/firefox`. O Firefox usa `manifests/firefox.json` durante a geração, sem alterar o `manifest.json` utilizado pelo Chrome e pelo Edge. Para distribuição permanente, envie o ZIP do Firefox para assinatura no Firefox Add-ons.
 
+O build remove automaticamente os ZIPs antigos de cada pasta antes de gerar a versão atual. Para validar a organização, as versões e as referências sem gerar pacotes, execute `powershell -ExecutionPolicy Bypass -File .\scripts\validate-project.ps1`. A mesma validação é executada no GitHub Actions a cada push e pull request.
+
 ## Estrutura
 
 ```text
@@ -117,30 +119,44 @@ guardian-monitor/
 ├── manifests/
 │   └── firefox.json
 ├── scripts/
-│   └── build-packages.ps1
+│   ├── build-packages.ps1
+│   └── validate-project.ps1
 ├── dist/
 │   ├── chromium/
 │   │   └── guardian-monitor-chromium-1.6.0.zip
 │   └── firefox/
 │       └── guardian-monitor-firefox-1.6.0.zip
-├── background.js
-├── content.js
-├── risk-engine.js
-├── risk-replay.js
-├── risk-replay.css
-├── popup.html
-├── popup.js
-├── dashboard.html
-├── dashboard.js
-├── style.css
-├── icon16.png
-├── icon32.png
-├── icon48.png
-├── icon128.png
+├── src/
+│   ├── background/
+│   │   ├── background.js
+│   │   ├── risk-engine.js
+│   │   └── risk-replay.js
+│   ├── content/
+│   │   └── content.js
+│   ├── dashboard/
+│   │   ├── dashboard.html
+│   │   ├── dashboard.js
+│   │   ├── dashboard-detail.css
+│   │   └── risk-replay.css
+│   ├── popup/
+│   │   ├── popup.html
+│   │   └── popup.js
+│   ├── shared/
+│   │   ├── style.css
+│   │   ├── dark.css
+│   │   └── brand.css
+│   └── icons/
+│       ├── icon.png
+│       ├── icon16.png
+│       ├── icon32.png
+│       ├── icon48.png
+│       └── icon128.png
+├── .github/workflows/validate.yml
 ├── README.md
 ├── PRIVACY.md
+├── SECURITY.md
+├── CHANGELOG.md
 ├── LICENSE
-└── .gitignore
 ```
 
 ## Versão

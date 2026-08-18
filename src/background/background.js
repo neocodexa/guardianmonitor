@@ -205,7 +205,7 @@ async function notify(title, message) {
   try {
     const options = {
       type: "basic",
-      iconUrl: "icons/icon128.png",
+      iconUrl: "src/icons/icon128.png",
       title: cleanText(title, 80),
       message: cleanText(message, 240)
     };

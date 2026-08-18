@@ -8,6 +8,8 @@
 - Adiciona filtros de 24 horas, 7 dias e 30 dias.
 - Adiciona exportação de incidente em JSON e relatório HTML local sem scripts ou recursos remotos.
 - Inclui traduções do Risk Replay em português, inglês e espanhol.
+- Organiza todo o código executável em `src/` e adiciona validação automática da estrutura no GitHub Actions.
+- Faz o build manter somente o ZIP da versão atual em cada pasta de distribuição.
 
 ## 1.5.2 - 2026-08-18
 

@@ -3,21 +3,8 @@ Add-Type -AssemblyName System.IO.Compression
 
 $projectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $outputRoot = Join-Path $projectRoot "dist"
-$packageFiles = @(
-  "background.js",
-  "brand.css",
-  "content.js",
-  "dark.css",
-  "dashboard-detail.css",
-  "dashboard.html",
-  "dashboard.js",
-  "popup.html",
-  "popup.js",
-  "risk-engine.js",
-  "risk-replay.css",
-  "risk-replay.js",
-  "style.css"
-)
+
+& (Join-Path $projectRoot "scripts\validate-project.ps1")
 
 function Compress-CompatibleArchive {
   param(
@@ -64,11 +51,8 @@ function New-BrowserPackage {
     New-Item -ItemType Directory -Path $stagingDirectory | Out-Null
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 
-    foreach ($relativePath in $packageFiles) {
-      Copy-Item -LiteralPath (Join-Path $projectRoot $relativePath) -Destination $stagingDirectory
-    }
-
-    Copy-Item -LiteralPath (Join-Path $projectRoot "icons") -Destination $stagingDirectory -Recurse
+    Get-ChildItem -LiteralPath $outputDirectory -Filter "guardian-monitor-$Browser-*.zip" -File | Remove-Item -Force
+    Copy-Item -LiteralPath (Join-Path $projectRoot "src") -Destination $stagingDirectory -Recurse
     Copy-Item -LiteralPath $ManifestPath -Destination (Join-Path $stagingDirectory "manifest.json")
     Compress-CompatibleArchive -SourceDirectory $stagingDirectory -DestinationPath $packagePath
     Write-Host "$Browser`: $packagePath"

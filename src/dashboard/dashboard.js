@@ -4,7 +4,7 @@ detailStylesheet.href = "dashboard-detail.css";
 document.head.append(detailStylesheet);
 const darkStylesheet = document.createElement("link");
 darkStylesheet.rel = "stylesheet";
-darkStylesheet.href = "dark.css";
+darkStylesheet.href = "../shared/dark.css";
 document.head.append(darkStylesheet);
 
 const I18N={
