@@ -6,6 +6,9 @@ O objetivo do projeto é ajudar o usuário a perceber atividades que merecem rev
 
 ## Recursos
 
+- Guardian Risk Engine local e reutilizável para downloads, extensões e formulários de credenciais.
+- Guardian Risk Score de 0 a 100 com níveis Baixo, Atenção, Moderado, Alto e Crítico.
+- Central de Segurança com indicadores por categoria e explicação dos sinais que contribuíram para cada evento.
 - Registro de arquivos selecionados em campos de upload.
 - Registro de tentativas de envio por formulários HTML.
 - Scanner local de downloads baseado em metadados, extensão do arquivo, dupla extensão, MIME, origem e sinais de segurança fornecidos pelo Chromium.
@@ -66,6 +69,14 @@ Consulte [SECURITY.md](SECURITY.md) para relatar problemas.
 
 Um alerta do Guardian Monitor não significa que houve invasão. A extensão aponta eventos observáveis que merecem revisão.
 
+O Guardian Risk Engine é heurístico. O Risk Score não confirma malware, invasão, roubo de senha ou comprometimento de sessão; ele agrega metadados e sinais observáveis para ajudar a priorizar revisões.
+
+### Fórmula do Guardian Risk Score
+
+Cada evento recebe uma pontuação limitada a 0–100. Para o score geral, eventos das últimas 24 horas usam peso 1,0, eventos de até 7 dias usam 0,6 e eventos mais antigos usam 0,25. O nível do evento também multiplica sua influência: Crítico 1,25, Alto 1,1, Moderado 0,9, Atenção 0,7 e Baixo 0,45.
+
+Os eventos são separados em downloads, extensões, credenciais e outros. Dentro de cada categoria, somente os dez maiores valores influenciam o resultado, com decaimento geométrico de 0,55 entre ocorrências. A soma é normalizada por `100 × (1 − e^(−soma/115))`. Isso preserva a influência de eventos recentes e graves e impede que centenas de ocorrências pequenas levem artificialmente o score a 100.
+
 Ela não consegue provar que um servidor recebeu ou armazenou um arquivo, detectar roubo de senhas ou cookies por malware, detectar acesso a uma conta feito em outro dispositivo, observar atividades anteriores à instalação ou substituir antivírus e ferramentas de segurança do sistema operacional. A classificação de downloads é heurística: risco alto significa que existem sinais relevantes, não que malware foi confirmado.
 
 ## Instalação para desenvolvimento
@@ -83,6 +94,7 @@ guardian-monitor/
 ├── manifest.json
 ├── background.js
 ├── content.js
+├── risk-engine.js
 ├── popup.html
 ├── popup.js
 ├── dashboard.html

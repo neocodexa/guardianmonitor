@@ -1,3 +1,5 @@
+importScripts("risk-engine.js");
+
 const MAX_EVENTS = 2000;
 const MAX_FILES_PER_EVENT = 20;
 const MAX_NAME_LENGTH = 180;
@@ -37,6 +39,7 @@ const DEFAULT_SETTINGS = Object.freeze({
   securityAlerts: true,
   credentialAlerts: true,
   language: "pt-BR",
+  theme: "light",
   trustedDomains: [],
   sensitiveExtensions: ["pdf", "doc", "docx", "xls", "xlsx", "csv", "txt", "key", "pem", "p12", "pfx", "json", "env", "sql", "zip", "rar", "7z"]
 });
@@ -101,6 +104,7 @@ function normalizeSettings(input) {
     securityAlerts: source.securityAlerts !== false,
     credentialAlerts: source.credentialAlerts !== false,
     language: ["pt-BR", "en", "es"].includes(source.language) ? source.language : "pt-BR",
+    theme: ["light", "dark"].includes(source.theme) ? source.theme : "light",
     trustedDomains,
     sensitiveExtensions: sensitiveExtensions.length ? sensitiveExtensions : DEFAULT_SETTINGS.sensitiveExtensions
   };
@@ -155,7 +159,7 @@ function sanitizeStoredEvent(event) {
     id: crypto.randomUUID(),
     timestamp: Date.now(),
     type: cleanText(event.type, 80),
-    severity: ["info", "medium", "high"].includes(event.severity) ? event.severity : undefined,
+    severity: ["info", "guarded", "medium", "high", "critical"].includes(event.severity) ? event.severity : undefined,
     domain: event.domain ? cleanText(event.domain, 253) : undefined,
     frame: event.frame === "iframe" ? "iframe" : event.frame === "top" ? "top" : undefined,
     formActionOrigin: event.formActionOrigin ? cleanText(event.formActionOrigin, MAX_TEXT_LENGTH) : undefined,
@@ -166,8 +170,13 @@ function sanitizeStoredEvent(event) {
     danger: event.danger ? cleanText(event.danger, 80) : undefined,
     downloadState: event.downloadState ? cleanText(event.downloadState, 40) : undefined,
     riskScore: Number.isFinite(Number(event.riskScore)) ? Math.max(0, Math.min(100, Math.floor(Number(event.riskScore)))) : undefined,
-    riskLevel: ["low", "medium", "high"].includes(event.riskLevel) ? event.riskLevel : undefined,
-    riskReasons: Array.isArray(event.riskReasons) ? event.riskReasons.map(item => cleanText(item, 160)).filter(Boolean).slice(0, 12) : undefined,
+    riskLevel: ["low", "guarded", "medium", "high", "critical"].includes(event.riskLevel) ? event.riskLevel : undefined,
+    riskEngineVersion: Number.isInteger(event.riskEngineVersion) && event.riskEngineVersion > 0 ? Math.min(event.riskEngineVersion, 999) : undefined,
+    riskReasons: Array.isArray(event.riskReasons) ? event.riskReasons.slice(0, 20).map(item => {
+      if (typeof item === "string") return cleanText(item, 240);
+      if (!item || typeof item !== "object") return null;
+      return { id: cleanText(item.id, 64), score: Math.max(-100, Math.min(100, Math.round(Number(item.score) || 0))), message: cleanText(item.message, 240) };
+    }).filter(Boolean) : undefined,
     targetDomain: event.targetDomain ? cleanText(event.targetDomain, 253) : undefined,
     pageProtocol: ["http", "https", "other"].includes(event.pageProtocol) ? event.pageProtocol : undefined,
     passwordFieldCount: Number.isInteger(event.passwordFieldCount) ? Math.max(0, Math.min(10, event.passwordFieldCount)) : undefined,
@@ -234,33 +243,24 @@ function assessCredentialForm(rawEvent, senderUrl) {
   if (!rawEvent || typeof rawEvent !== "object") return null;
   const sourceDomain = normalizeDomainFromUrl(senderUrl);
   const actionOrigin = normalizeOrigin(rawEvent.formAction);
-  let targetDomain = sourceDomain;
+  let targetDomain = "";
   let actionProtocol = "";
   try {
     if (actionOrigin) {
       const action = new URL(actionOrigin);
-      targetDomain = cleanText(action.hostname.toLowerCase(), 253) || sourceDomain;
-      actionProtocol = action.protocol;
+      targetDomain = cleanText(action.hostname.toLowerCase(), 253);
+      actionProtocol = action.protocol.replace(":", "");
     }
   } catch {}
   const pageProtocol = ["http", "https"].includes(rawEvent.pageProtocol) ? rawEvent.pageProtocol : "other";
   const passwordFieldCount = Math.max(1, Math.min(10, Number(rawEvent.passwordFieldCount) || 1));
   const usernamePresent = Boolean(rawEvent.usernamePresent);
   const frame = rawEvent.frame === "iframe" ? "iframe" : "top";
-  const reasons = [];
-  let score = 0;
-  if (pageProtocol === "http") { score += 80; reasons.push("A página de login usa HTTP sem criptografia"); }
-  if (actionProtocol === "http:") { score += 90; reasons.push("O formulário de senha envia dados por HTTP sem criptografia"); }
-  if (actionOrigin && !sameSiteHost(sourceDomain, targetDomain)) { score += 30; reasons.push(`O formulário envia para um domínio diferente: ${targetDomain}`); }
-  if (!actionOrigin) { score += 10; reasons.push("Não foi possível validar o destino do formulário"); }
-  if (frame === "iframe") { score += 15; reasons.push("O formulário de senha está dentro de um iframe"); }
-  if (targetDomain.startsWith("xn--") || targetDomain.includes(".xn--")) { score += 20; reasons.push("O destino usa domínio internacionalizado em punycode"); }
-  if (isIpHost(targetDomain)) { score += 25; reasons.push("O destino do login usa um endereço IP em vez de domínio"); }
-  score = Math.min(100, score);
-  if (score < 25) return null;
+  const risk = GuardianRiskEngine.analyzeCredential({ pageProtocol, actionProtocol, pageDomain: sourceDomain, targetDomain, crossDomain: Boolean(targetDomain && !sameSiteHost(sourceDomain, targetDomain)), ipTarget: isIpHost(targetDomain), punycode: targetDomain.startsWith("xn--") || targetDomain.includes(".xn--"), inIframe: frame === "iframe" });
+  if (risk.score < 20) return null;
   return {
     type: "credential_form_risk",
-    severity: score >= 60 ? "high" : "medium",
+    severity: risk.level,
     domain: sourceDomain,
     targetDomain,
     frame,
@@ -269,9 +269,10 @@ function assessCredentialForm(rawEvent, senderUrl) {
     pageProtocol,
     passwordFieldCount,
     usernamePresent,
-    riskScore: score,
-    riskLevel: score >= 60 ? "high" : "medium",
-    riskReasons: reasons,
+    riskScore: risk.score,
+    riskLevel: risk.level,
+    riskReasons: risk.reasons,
+    riskEngineVersion: risk.riskEngineVersion,
     note: "Possível risco no envio de credenciais. Nenhuma senha foi lida ou armazenada."
   };
 }
@@ -281,7 +282,8 @@ async function maybeAlertCredential(event) {
   if (!settings.alerts || !settings.credentialAlerts) return;
   const levels={"pt-BR":event.severity === "high" ? "ALTO" : "MODERADO",en:event.severity === "high" ? "HIGH" : "MODERATE",es:event.severity === "high" ? "ALTO" : "MODERADO"};
   const level=levels[settings.language]||levels["pt-BR"];
-  const detail = event.riskReasons?.[0] || event.note || "atividade de credencial que merece revisão";
+  const firstReason = event.riskReasons?.[0];
+  const detail = (typeof firstReason === "string" ? firstReason : firstReason?.message) || event.note || "atividade de credencial que merece revisão";
   const credentialTitles={"pt-BR":`Guardian Monitor: risco ${level} para credenciais`,en:`Guardian Monitor: ${level} credential risk`,es:`Guardian Monitor: riesgo ${level} de credenciales`};
   await notify(credentialTitles[settings.language]||credentialTitles["pt-BR"], `${event.domain || "site"}: ${cleanText(detail, 150)}`);
 }
@@ -309,17 +311,8 @@ function extensionRisk(ext) {
   const riskyPermissions = (ext.permissions || []).filter(permission => RISKY_PERMISSIONS.has(permission));
   const broadHosts = (ext.hostPermissions || []).filter(host => host === "<all_urls>" || host.includes("*://*/*") || host.includes("http://*/*") || host.includes("https://*/*"));
   const credentialPermissions = (ext.permissions || []).filter(permission => CREDENTIAL_PERMISSIONS.has(permission));
-  let score = riskyPermissions.length + broadHosts.length * 2;
-  if (ext.installType && !["normal", "development"].includes(ext.installType)) score += 1;
-  let credentialScore = 0;
-  if (credentialPermissions.includes("debugger")) credentialScore += 5;
-  if (credentialPermissions.includes("nativeMessaging")) credentialScore += 3;
-  if (credentialPermissions.includes("cookies")) credentialScore += 3;
-  if (credentialPermissions.includes("webRequest") || credentialPermissions.includes("webRequestBlocking")) credentialScore += 2;
-  if (credentialPermissions.includes("scripting")) credentialScore += 2;
-  if (credentialPermissions.includes("clipboardRead")) credentialScore += 1;
-  if (broadHosts.length && credentialPermissions.length) credentialScore += 3;
-  return { score, riskyPermissions, broadHosts, credentialPermissions, credentialScore };
+  const assessed = GuardianRiskEngine.analyzeExtension(ext, { baselineKnown: true });
+  return { ...assessed, riskyPermissions, broadHosts, credentialPermissions, credentialScore: assessed.score };
 }
 
 async function hasManagementPermission() {
@@ -332,8 +325,8 @@ async function getExtensions() {
   return all.filter(ext => ext.id !== chrome.runtime.id).map(sanitizeExtensionSnapshot);
 }
 
-async function recordSecurityEvent(type, ext, note, severity = "info") {
-  await saveEvent({ type, severity, extension: ext, note });
+async function recordSecurityEvent(type, ext, note, severity = "info", risk = null) {
+  await saveEvent({ type, severity, extension: ext, note, riskScore: risk?.score, riskLevel: risk?.level, riskReasons: risk?.reasons, riskEngineVersion: risk?.riskEngineVersion });
 }
 
 async function securityAlert(title, ext, detail) {
@@ -370,42 +363,39 @@ async function auditExtensions({ alertChanges = true, recordAudit = true } = {})
   const findings = [];
   for (const ext of current) {
     const old = extensionBaseline[ext.id];
-    const risk = extensionRisk(ext);
+    const newPermissions = old ? arrayDiff(ext.permissions, old.permissions) : ext.permissions;
+    const newHosts = old ? arrayDiff(ext.hostPermissions, old.hostPermissions) : ext.hostPermissions;
+    const risk = GuardianRiskEngine.analyzeExtension(ext, { baselineKnown: Boolean(old), isNew: !old, newPermissions: [...newPermissions, ...newHosts], recentlyEnabled: Boolean(old && !old.enabled && ext.enabled), versionChanged: Boolean(old && old.version !== ext.version) });
     if (!old) {
-      const severity = risk.score >= 3 ? "high" : risk.score >= 1 ? "medium" : "info";
-      const permissions = [...risk.riskyPermissions, ...risk.broadHosts].slice(0, 12).join(", ");
-      const credentialDetail = risk.credentialScore >= 5 ? `; possível exposição de sessão/credenciais: ${risk.credentialPermissions.join(", ")}` : "";
-      findings.push({ type: risk.credentialScore >= 5 ? "credential_extension_risk" : "extension_new", ext, severity: risk.credentialScore >= 5 ? "high" : severity, detail: `${permissions ? `nova extensão; permissões de atenção: ${permissions}` : "nova extensão instalada"}${credentialDetail}` });
+      const permissions = [...ext.permissions.filter(permission => RISKY_PERMISSIONS.has(permission)), ...ext.hostPermissions.filter(host => host.includes("*"))].slice(0, 12).join(", ");
+      findings.push({ type: risk.score >= 60 ? "credential_extension_risk" : "extension_new", ext, severity: risk.level === "low" ? "info" : risk.level, risk, detail: permissions ? `nova extensão; permissões de atenção: ${permissions}` : "nova extensão instalada" });
       continue;
     }
-    const newPermissions = arrayDiff(ext.permissions, old.permissions);
-    const newHosts = arrayDiff(ext.hostPermissions, old.hostPermissions);
     if (newPermissions.length || newHosts.length) {
       const sensitiveAdded = newPermissions.filter(permission => RISKY_PERMISSIONS.has(permission));
       const broadAdded = newHosts.filter(host => host === "<all_urls>" || host.includes("*://*/*") || host.includes("http://*/*") || host.includes("https://*/*"));
       const severity = sensitiveAdded.length || broadAdded.length ? "high" : "medium";
       const changed = [...newPermissions, ...newHosts].slice(0, 16).join(", ");
-      const currentRisk = extensionRisk(ext);
       const credentialAdded = newPermissions.filter(permission => CREDENTIAL_PERMISSIONS.has(permission));
-      const credentialConcern = currentRisk.credentialScore >= 5 && (credentialAdded.length || broadAdded.length);
-      findings.push({ type: credentialConcern ? "credential_extension_risk" : "extension_permissions_changed", ext, severity: credentialConcern ? "high" : severity, detail: `${credentialConcern ? "mudança com possível impacto em sessão/credenciais; " : ""}novas permissões: ${changed}` });
+      const credentialConcern = risk.score >= 60 && (credentialAdded.length || broadAdded.length);
+      findings.push({ type: credentialConcern ? "credential_extension_risk" : "extension_permissions_changed", ext, severity: risk.level === "low" ? severity : risk.level, risk, detail: `${credentialConcern ? "mudança com possível impacto em sessão/credenciais; " : ""}novas permissões: ${changed}` });
     }
-    if (!old.enabled && ext.enabled) findings.push({ type: "extension_enabled", ext, severity: risk.score >= 2 ? "medium" : "info", detail: "extensão foi ativada" });
-    if (old.version !== ext.version) findings.push({ type: "extension_updated", ext, severity: "info", detail: `atualizada de ${cleanText(old.version || "?", 40)} para ${cleanText(ext.version || "?", 40)}` });
+    if (!old.enabled && ext.enabled) findings.push({ type: "extension_enabled", ext, severity: risk.level === "low" ? "info" : risk.level, risk, detail: "extensão foi ativada" });
+    if (old.version !== ext.version) findings.push({ type: "extension_updated", ext, severity: risk.level === "low" ? "info" : risk.level, risk, detail: `atualizada de ${cleanText(old.version || "?", 40)} para ${cleanText(ext.version || "?", 40)}` });
   }
   for (const [id, old] of Object.entries(extensionBaseline)) {
     if (!currentMap[id]) findings.push({ type: "extension_removed", ext: sanitizeExtensionSnapshot(old), severity: "info", detail: "extensão removida" });
   }
   for (const finding of findings) {
-    await recordSecurityEvent(finding.type, finding.ext, finding.detail, finding.severity);
-    if (alertChanges && ["medium", "high"].includes(finding.severity)) {
-      const title = finding.severity === "high" ? "Guardian Monitor: mudança de segurança" : "Guardian Monitor: extensão alterada";
+    await recordSecurityEvent(finding.type, finding.ext, finding.detail, finding.severity, finding.risk);
+    if (alertChanges && ["medium", "high", "critical"].includes(finding.severity)) {
+      const title = ["high", "critical"].includes(finding.severity) ? "Guardian Monitor: mudança de segurança" : "Guardian Monitor: extensão alterada";
       await securityAlert(title, finding.ext, finding.detail);
     }
   }
   await chrome.storage.local.set({ extensionBaseline: currentMap, lastSecurityAudit: Date.now() });
   if (recordAudit) {
-    const severity = findings.some(item => item.severity === "high") ? "high" : findings.some(item => item.severity === "medium") ? "medium" : "info";
+    const severity = findings.some(item => item.severity === "critical") ? "critical" : findings.some(item => item.severity === "high") ? "high" : findings.some(item => item.severity === "medium") ? "medium" : findings.some(item => item.severity === "guarded") ? "guarded" : "info";
     const note = findings.length ? `Auditoria concluída: ${findings.length} mudança(s) encontrada(s).` : `Auditoria concluída: nenhuma mudança detectada em ${current.length} extensões.`;
     await saveEvent({ type: "security_audit", severity, note });
   }
@@ -431,40 +421,27 @@ function assessDownload(item) {
   const parts = name.split(".");
   const extension = parts.length > 1 ? cleanExtension(parts.at(-1)) : "";
   const danger = cleanText(item.danger || "", 80);
-  const reasons = [];
-  let score = 0;
-  if (HIGH_DANGER_TYPES.has(danger)) { score += 80; reasons.push(`Chromium classificou o download como ${danger}`); }
-  else if (MEDIUM_DANGER_TYPES.has(danger)) { score += 45; reasons.push(`Chromium sinalizou o download como ${danger}`); }
-  else if (["asyncScanning", "asyncLocalPasswordScanning"].includes(danger)) { score += 15; reasons.push("O Chromium ainda está analisando o download"); }
-  else if (["deepScannedSafe", "safe", "allowlistedByPolicy"].includes(danger)) reasons.push("Nenhum perigo conhecido foi indicado pelo Chromium");
-  if (EXECUTABLE_EXTENSIONS.has(extension)) { score += 25; reasons.push(`Arquivo executável .${extension}`); }
-  if (SCRIPT_EXTENSIONS.has(extension)) { score += 30; reasons.push(`Arquivo de script/comando .${extension}`); }
-  if (ARCHIVE_EXTENSIONS.has(extension)) { score += 8; reasons.push(`Arquivo compactado ou imagem de disco .${extension}`); }
-  if (detectDoubleExtension(name)) { score += 45; reasons.push("Nome usa dupla extensão potencialmente enganosa"); }
   const domain = normalizeDomainFromUrl(item.finalUrl || item.url);
+  let protocol = "other";
   try {
     const u = new URL(String(item.finalUrl || item.url || ""));
-    if (u.protocol === "http:") { score += 10; reasons.push("Download originado por conexão HTTP sem criptografia"); }
+    protocol = u.protocol === "http:" ? "http" : u.protocol === "https:" ? "https" : "other";
   } catch {}
   const mime = cleanText(item.mime || "", 120).toLowerCase();
-  if ((EXECUTABLE_EXTENSIONS.has(extension) || SCRIPT_EXTENSIONS.has(extension)) && (mime.startsWith("text/") || mime.includes("pdf") || mime.startsWith("image/"))) {
-    score += 20;
-    reasons.push("Tipo MIME não combina com a extensão executável/script");
-  }
-  score = Math.min(100, score);
-  const riskLevel = score >= 60 ? "high" : score >= 25 ? "medium" : "low";
+  const risk = GuardianRiskEngine.analyzeDownload({ name, extension, danger, mime, protocol });
   return {
     type: "download_scan",
-    severity: riskLevel === "high" ? "high" : riskLevel === "medium" ? "medium" : "info",
+    severity: risk.level === "low" ? "info" : risk.level,
     downloadId: Number.isInteger(item.id) ? item.id : undefined,
     domain,
     files: [{ name, size: item.fileSize || item.totalBytes || 0, type: item.mime || "", extension }],
     danger: danger || "unknown",
     downloadState: cleanText(item.state || "in_progress", 40),
-    riskScore: score,
-    riskLevel,
-    riskReasons: reasons.length ? reasons : ["Nenhum sinal de risco relevante foi detectado pelos metadados"],
-    note: `Scanner de download: risco ${riskLevel === "high" ? "alto" : riskLevel === "medium" ? "moderado" : "baixo"}`
+    riskScore: risk.score,
+    riskLevel: risk.level,
+    riskReasons: risk.reasons,
+    riskEngineVersion: risk.riskEngineVersion,
+    note: `Scanner de download: risco ${risk.level}`
   };
 }
 
@@ -485,7 +462,7 @@ function upsertDownloadScan(event) {
 
 async function maybeAlertDownload(event) {
   const settings = await getSettings();
-  if (!settings.alerts || !["medium", "high"].includes(event.riskLevel)) return;
+  if (!settings.alerts || !["medium", "high", "critical"].includes(event.riskLevel)) return;
   const file = event.files?.[0]?.name || "download";
   const levels={"pt-BR":event.riskLevel === "high" ? "ALTO" : "MODERADO",en:event.riskLevel === "high" ? "HIGH" : "MODERATE",es:event.riskLevel === "high" ? "ALTO" : "MODERADO"};
   const level=levels[settings.language]||levels["pt-BR"];

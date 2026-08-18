@@ -12,6 +12,8 @@ Ao iniciar downloads, a extensão registra o nome final observado, tamanho, tipo
 
 Na auditoria do navegador, após autorização explícita do usuário, a extensão consulta informações disponibilizadas pela API `chrome.management`, como nome, versão, estado, tipo de instalação e permissões das extensões instaladas. A permissão de gerenciamento é opcional.
 
+O Guardian Risk Engine processa esses metadados totalmente no dispositivo. Eventos novos podem conter `riskScore`, `riskLevel`, `riskReasons` e `riskEngineVersion`. Esses campos descrevem sinais heurísticos e não incluem conteúdo de arquivos, senhas, cookies ou valores digitados. Caminhos completos de arquivos e URLs completas de downloads não são persistidos.
+
 ## Dados que não são coletados
 
 Guardian Monitor não foi projetado para ler senhas salvas, cookies, conteúdo dos arquivos, conteúdo de campos de texto, mensagens, histórico completo de navegação ou dados de outros aplicativos do computador.
