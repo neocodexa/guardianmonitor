@@ -1,6 +1,6 @@
 # Guardian Monitor
 
-Guardian Monitor é uma extensão local para navegadores baseados em Chromium que registra metadados de arquivos selecionados para upload, tentativas de envio por formulários HTML, downloads, classificação local de risco de downloads e mudanças observáveis nas extensões instaladas.
+Guardian Monitor é uma extensão local para navegadores baseados em Chromium e Firefox que registra metadados de arquivos selecionados para upload, tentativas de envio por formulários HTML, downloads, classificação local de risco de downloads e mudanças observáveis nas extensões instaladas.
 
 O objetivo do projeto é ajudar o usuário a perceber atividades que merecem revisão sem enviar o histórico para servidores externos.
 
@@ -11,7 +11,7 @@ O objetivo do projeto é ajudar o usuário a perceber atividades que merecem rev
 - Central de Segurança com indicadores por categoria e explicação dos sinais que contribuíram para cada evento.
 - Registro de arquivos selecionados em campos de upload.
 - Registro de tentativas de envio por formulários HTML.
-- Scanner local de downloads baseado em metadados, extensão do arquivo, dupla extensão, MIME, origem e sinais de segurança fornecidos pelo Chromium.
+- Scanner local de downloads baseado em metadados, extensão do arquivo, dupla extensão, MIME, origem e sinais de segurança fornecidos pelo navegador.
 - Alertas de risco moderado e alto em downloads.
 - Detecção de nomes potencialmente enganosos, como `documento.pdf.exe`.
 - Alertas locais para arquivos potencialmente sensíveis.
@@ -28,7 +28,7 @@ O objetivo do projeto é ajudar o usuário a perceber atividades que merecem rev
 
 O Guardian Monitor não lê o conteúdo dos arquivos monitorados. Para uploads, guarda somente metadados como nome, tamanho, tipo, extensão, domínio e horário. URLs completas de páginas não são armazenadas.
 
-Os dados do Guardian Monitor são mantidos em `chrome.storage.local`. A extensão restringe esse armazenamento a contextos confiáveis da própria extensão usando `TRUSTED_CONTEXTS`.
+Os dados do Guardian Monitor são mantidos na API local de armazenamento do navegador. No Chromium, a extensão restringe esse armazenamento a contextos confiáveis da própria extensão usando `TRUSTED_CONTEXTS`.
 
 Consulte [PRIVACY.md](PRIVACY.md) para detalhes.
 
@@ -38,7 +38,7 @@ Consulte [PRIVACY.md](PRIVACY.md) para detalhes.
 | --- | --- |
 | `storage` | Guardar configurações, histórico e linha de base local das extensões. |
 | `notifications` | Mostrar alertas locais do Guardian Monitor. |
-| `downloads` | Observar downloads, consultar seus metadados e acompanhar mudanças de estado e do indicador `danger` do Chromium. |
+| `downloads` | Observar downloads, consultar seus metadados e acompanhar mudanças de estado e dos indicadores de segurança fornecidos pelo navegador. |
 | `management` | Permissão opcional solicitada somente quando o usuário ativa a auditoria de extensões. |
 | `<all_urls>` | Observar campos de upload nas páginas acessadas pelo usuário. |
 
@@ -59,7 +59,7 @@ A versão 1.3 aplica as seguintes medidas:
 - Armazenamento somente do mínimo necessário.
 - URLs completas de páginas e downloads não são persistidas.
 - O scanner de downloads não lê o conteúdo do arquivo e não envia hashes ou arquivos a serviços externos.
-- Restrição do `chrome.storage.local` a contextos confiáveis.
+- Restrição do armazenamento local a contextos confiáveis quando essa proteção é disponibilizada pelo navegador.
 - Histórico limitado para reduzir exposição e uso excessivo de armazenamento.
 - Sanitização das exportações CSV contra execução de fórmulas ao abrir em planilhas.
 
@@ -87,11 +87,22 @@ Ela não consegue provar que um servidor recebeu ou armazenou um arquivo, detect
 4. Clique em **Carregar sem compactação**.
 5. Selecione a pasta do projeto que contém `manifest.json`.
 
+### Firefox
+
+1. Execute `powershell -ExecutionPolicy Bypass -File .\build-firefox.ps1` no PowerShell.
+2. Abra `about:debugging#/runtime/this-firefox` no Firefox.
+3. Clique em **Carregar extensão temporária**.
+4. Selecione o arquivo `manifest.json` de uma cópia descompactada do ZIP criado em `dist`.
+
+O pacote Firefox usa `manifest.firefox.json` durante a geração, sem alterar o `manifest.json` utilizado pelo Chrome e pelo Edge. Para distribuição permanente, envie o ZIP gerado para assinatura no Firefox Add-ons.
+
 ## Estrutura
 
 ```text
 guardian-monitor/
 ├── manifest.json
+├── manifest.firefox.json
+├── build-firefox.ps1
 ├── background.js
 ├── content.js
 ├── risk-engine.js

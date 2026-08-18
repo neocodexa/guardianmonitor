@@ -4,6 +4,8 @@
 
 - Substitui as iniciais `GM` pelo novo logo do Guardian Monitor no painel e no popup da extensão.
 - Atualiza os ícones utilizados pelo navegador e adiciona a arte do logo em alta resolução.
+- Adiciona manifesto e empacotamento específicos para Firefox, mantendo o pacote Chromium separado.
+- Adapta background, armazenamento e notificações para as diferenças entre Firefox e Chromium.
 
 ## 1.5.1 - 2026-08-18
 

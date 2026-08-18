@@ -1,4 +1,4 @@
-importScripts("risk-engine.js");
+if (typeof importScripts === "function") importScripts("risk-engine.js");
 
 const MAX_EVENTS = 2000;
 const MAX_FILES_PER_EVENT = 20;
@@ -203,13 +203,14 @@ async function notify(title, message) {
   const settings = await getSettings();
   if (!settings.alerts) return;
   try {
-    await chrome.notifications.create({
+    const options = {
       type: "basic",
-      iconUrl: "icon128.png",
+      iconUrl: "icons/icon128.png",
       title: cleanText(title, 80),
-      message: cleanText(message, 240),
-      priority: 2
-    });
+      message: cleanText(message, 240)
+    };
+    if (typeof browser === "undefined") options.priority = 2;
+    await chrome.notifications.create(options);
   } catch {}
 }
 
@@ -481,7 +482,9 @@ async function refreshDownloadScan(downloadId) {
 }
 
 async function restrictStorageAccess() {
-  await chrome.storage.local.setAccessLevel({ accessLevel: "TRUSTED_CONTEXTS" });
+  if (typeof chrome.storage.local.setAccessLevel === "function") {
+    await chrome.storage.local.setAccessLevel({ accessLevel: "TRUSTED_CONTEXTS" });
+  }
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
