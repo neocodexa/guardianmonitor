@@ -89,20 +89,27 @@ Ela não consegue provar que um servidor recebeu ou armazenou um arquivo, detect
 
 ### Firefox
 
-1. Execute `powershell -ExecutionPolicy Bypass -File .\build-firefox.ps1` no PowerShell.
+1. Execute `powershell -ExecutionPolicy Bypass -File .\scripts\build-packages.ps1` no PowerShell.
 2. Abra `about:debugging#/runtime/this-firefox` no Firefox.
 3. Clique em **Carregar extensão temporária**.
 4. Selecione o arquivo `manifest.json` de uma cópia descompactada do ZIP criado em `dist`.
 
-O pacote Firefox usa `manifest.firefox.json` durante a geração, sem alterar o `manifest.json` utilizado pelo Chrome e pelo Edge. Para distribuição permanente, envie o ZIP gerado para assinatura no Firefox Add-ons.
+O script gera pacotes separados em `dist/chromium` e `dist/firefox`. O Firefox usa `manifests/firefox.json` durante a geração, sem alterar o `manifest.json` utilizado pelo Chrome e pelo Edge. Para distribuição permanente, envie o ZIP do Firefox para assinatura no Firefox Add-ons.
 
 ## Estrutura
 
 ```text
 guardian-monitor/
 ├── manifest.json
-├── manifest.firefox.json
-├── build-firefox.ps1
+├── manifests/
+│   └── firefox.json
+├── scripts/
+│   └── build-packages.ps1
+├── dist/
+│   ├── chromium/
+│   │   └── guardian-monitor-chromium-1.5.2.zip
+│   └── firefox/
+│       └── guardian-monitor-firefox-1.5.2.zip
 ├── background.js
 ├── content.js
 ├── risk-engine.js

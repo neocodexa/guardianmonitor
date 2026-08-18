@@ -6,6 +6,7 @@
 - Atualiza os ícones utilizados pelo navegador e adiciona a arte do logo em alta resolução.
 - Adiciona manifesto e empacotamento específicos para Firefox, mantendo o pacote Chromium separado.
 - Adapta background, armazenamento e notificações para as diferenças entre Firefox e Chromium.
+- Organiza manifestos, scripts e pacotes distribuíveis em diretórios separados por navegador.
 
 ## 1.5.1 - 2026-08-18
 
