@@ -1,0 +1,12 @@
+/* Mantém os detalhes completos e legíveis sem alargar toda a tabela. */
+#rows .detail-cell {
+  width: 38%;
+  min-width: 320px;
+  max-width: 560px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: break-word;
+  line-height: 1.55;
+  vertical-align: middle;
+}
