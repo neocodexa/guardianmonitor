@@ -1,12 +1,45 @@
-/* Mantém os detalhes completos e legíveis sem alargar toda a tabela. */
+/* Mantém todas as colunas do histórico visíveis sem rolagem horizontal. */
+#history .tablewrap {
+  overflow-x: hidden;
+}
+
+#history table {
+  table-layout: fixed;
+}
+
+#history th,
+#history td {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+#history th:nth-child(1) { width: 13%; }
+#history th:nth-child(2) { width: 13%; }
+#history th:nth-child(3) { width: 22%; }
+#history th:nth-child(4) { width: 20%; }
+#history th:nth-child(5) { width: 23%; }
+#history th:nth-child(6) { width: 9%; }
+
+#history td:last-child .badge,
+#history td:last-child .risk,
+#history td:last-child .ok,
+#history td:last-child .neutral {
+  max-width: 100%;
+  padding-inline: 8px;
+  white-space: normal;
+  text-align: center;
+}
+
 #rows .detail-cell {
-  width: 38%;
-  min-width: 320px;
-  max-width: 560px;
+  width: auto;
+  min-width: 0;
+  max-width: none;
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   line-height: 1.55;
   vertical-align: middle;
 }
@@ -14,7 +47,8 @@
 .risk-hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px; margin-bottom: 20px; border-radius: 22px; color: white; background: linear-gradient(135deg, #0f172a, #1d4ed8); box-shadow: 0 18px 38px rgba(29, 78, 216, .2); }
 .risk-hero span, .risk-hero strong, .risk-hero b { display: block; }
 .risk-hero span { font-size: 20px; }
-.risk-hero strong { font-size: 54px; line-height: 1.1; margin: 8px 0; }
+.risk-hero strong { font-size: 54px; line-height: 1.1; margin: 8px 0; white-space: nowrap; }
+.risk-hero #overallScore { display: inline; font-size: inherit; }
 .risk-hero b { letter-spacing: .08em; }
 .risk-hero p { max-width: 460px; color: #dbeafe; }
 .security-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
