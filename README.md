@@ -94,8 +94,6 @@ guardian-monitor/
 ├── icon128.png
 ├── README.md
 ├── PRIVACY.md
-├── SECURITY.md
-├── CHANGELOG.md
 ├── LICENSE
 └── .gitignore
 ```
