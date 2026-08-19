@@ -33,6 +33,7 @@ html[data-theme="dark"] .perm { background: #51432e; color: #f2cc8a; }
 html[data-theme="dark"] .risk.high { background: #573538; color: #ffb4b8; }
 html[data-theme="dark"] td small { color: #a1acbd; }
 html[data-theme="dark"] select option { background: #30353d; color: #eef2f7; }
+html[data-theme="dark"] .settings-secondary { border-top-color: #4a505b; }
 html[data-theme="dark"] .risk-hero { background: linear-gradient(135deg, #353b46, #1d4ed8); box-shadow: 0 18px 38px rgba(0, 0, 0, .22); }
 html[data-theme="dark"] .security-item { background: #30353d; border-color: #4b525d; }
 html[data-theme="dark"] .security-item p { color: #bdc6d4; }

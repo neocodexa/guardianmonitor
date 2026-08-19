@@ -55,6 +55,45 @@ aside .brand-logo {
   margin: 0;
 }
 
+body.popup {
+  width: 400px;
+}
+
+.popup main {
+  padding: 20px;
+}
+
+.popup .event div > span {
+  max-width: 48%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+aside {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow: hidden;
+}
+
+aside nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.settings-secondary {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #e5eaf1;
+}
+
+.settings-secondary button {
+  min-width: 180px;
+}
+
 .credit .github-link {
   display: flex;
   width: max-content;

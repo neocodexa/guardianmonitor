@@ -65,13 +65,9 @@ async function init() {
   if (!Array.isArray(events) || !events.length) {
     box.append(element("div", "empty", t("none")));
   } else {
-    events.slice(0, 5).forEach(event => box.append(renderEvent(event)));
+    events.slice(0, 3).forEach(event => box.append(renderEvent(event)));
   }
 }
 
 document.getElementById("openDashboard").addEventListener("click", () => chrome.runtime.openOptionsPage());
-const darkStylesheet = document.createElement("link");
-darkStylesheet.rel = "stylesheet";
-darkStylesheet.href = "dark.css";
-document.head.append(darkStylesheet);
 init();

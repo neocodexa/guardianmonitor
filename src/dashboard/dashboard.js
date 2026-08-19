@@ -36,12 +36,13 @@ const REASON_MESSAGES={
 let currentLanguage="pt-BR";
 function t(key){return I18N[currentLanguage]?.[key]||I18N["pt-BR"][key]||key}
 function locale(){return currentLanguage==="en"?"en-US":currentLanguage==="es"?"es-ES":"pt-BR"}
-function applyTranslations(){document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-i18n]").forEach(node=>{node.textContent=t(node.dataset.i18n)});document.querySelectorAll("[data-i18n-placeholder]").forEach(node=>{node.placeholder=t(node.dataset.i18nPlaceholder)});const active=document.querySelector(".nav.active");if(active){const titles={history:"titleHistory",center:"titleCenter",replay:"titleReplay",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};document.getElementById("viewTitle").textContent=t(titles[active.dataset.view]||"titleHistory")}}
+function applyTranslations(){document.documentElement.lang=currentLanguage;document.querySelectorAll("[data-i18n]").forEach(node=>{node.textContent=t(node.dataset.i18n)});document.querySelectorAll("[data-i18n-placeholder]").forEach(node=>{node.placeholder=t(node.dataset.i18nPlaceholder)});const titles={history:"titleHistory",center:"titleCenter",replay:"titleReplay",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};document.getElementById("viewTitle").textContent=t(titles[currentView]||"titleHistory")}
 let events = [];
 let settings = {};
 let browserExtensions = [];
 let replayIncidents = [];
 let selectedReplayId = null;
+let currentView = "history";
 const DEFAULT_SENSITIVE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx", "csv", "txt", "key", "pem", "p12", "pfx", "json", "env", "sql", "zip", "rar", "7z"];
 const CREDENTIAL_TYPES = new Set(["credential_form_risk", "credential_extension_risk"]);
 const SECURITY_TYPES = new Set(["extension_new", "extension_permissions_changed", "extension_enabled", "extension_disabled", "extension_updated", "extension_removed", "security_audit", "download_scan", ...CREDENTIAL_TYPES]);
@@ -576,13 +577,20 @@ async function init() {
   await loadExtensions();
 }
 
-$$('.nav').forEach(button => button.addEventListener("click", () => {
+function openView(view, activeNavView = view) {
+  const target = $(`#${view}`);
+  if (!target) return;
   $$('.nav,.view').forEach(item => item.classList.remove("active"));
-  button.classList.add("active");
-  $(`#${button.dataset.view}`).classList.add("active");
+  document.querySelector(`.nav[data-view="${activeNavView}"]`)?.classList.add("active");
+  target.classList.add("active");
+  currentView = view;
   const titles={history:"titleHistory",center:"titleCenter",replay:"titleReplay",security:"titleAudit",trusted:"titleTrusted",settings:"titleSettings",about:"titleLimits"};
-  $("#viewTitle").textContent=t(titles[button.dataset.view]||"titleHistory");
-}));
+  $("#viewTitle").textContent=t(titles[view]||"titleHistory");
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+$$('.nav').forEach(button => button.addEventListener("click", () => openView(button.dataset.view)));
+$("#openLimitations").addEventListener("click", () => openView("about", "settings"));
 
 $("#search").addEventListener("input", render);
 $("#filter").addEventListener("change", render);
