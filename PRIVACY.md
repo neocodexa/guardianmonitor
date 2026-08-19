@@ -10,7 +10,7 @@ Ao selecionar arquivos para upload, a extensão pode registrar nome do arquivo, 
 
 Ao iniciar downloads, a extensão registra o nome final observado, tamanho, tipo MIME, extensão, domínio de origem, estado, indicador `danger` fornecido pelo Chromium e uma classificação de risco calculada localmente. A URL completa do download não é persistida. O conteúdo do arquivo não é lido e nenhum arquivo, hash ou histórico é enviado a serviço externo pelo scanner.
 
-Na auditoria do navegador, após autorização explícita do usuário, a extensão consulta informações disponibilizadas pela API `chrome.management`, como nome, versão, estado, tipo de instalação e permissões das extensões instaladas. A permissão de gerenciamento é opcional.
+Na auditoria do navegador, após autorização explícita do usuário, a extensão consulta informações disponibilizadas pela API `chrome.management`, como nome, descrição, versão, estado, tipo de instalação e permissões das extensões instaladas. A permissão de gerenciamento é opcional. Categoria funcional, pontuações, confiança e mudanças são derivados localmente desses metadados, sem coleta adicional.
 
 O Guardian Risk Engine processa esses metadados totalmente no dispositivo. Eventos novos podem conter `riskScore`, `riskLevel`, `riskReasons` e `riskEngineVersion`. Esses campos descrevem sinais heurísticos e não incluem conteúdo de arquivos, senhas, cookies ou valores digitados. Caminhos completos de arquivos e URLs completas de downloads não são persistidos.
 
@@ -22,7 +22,7 @@ Guardian Monitor não foi projetado para ler senhas salvas, cookies, conteúdo d
 
 Histórico, configurações e linha de base das extensões ficam em `chrome.storage.local`. O acesso ao armazenamento é configurado como `TRUSTED_CONTEXTS`, restringindo-o às páginas e ao service worker da própria extensão.
 
-O histórico é limitado a 2.000 eventos.
+A linha de base pode incluir versão, permissões, acessos a hosts e pontuações heurísticas anteriores para calcular Permission Drift e Risk Delta. O histórico é limitado a 2.000 eventos.
 
 ## Compartilhamento
 

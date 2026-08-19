@@ -80,6 +80,16 @@ Os eventos são separados em downloads, extensões, credenciais e outros. Dentro
 
 Ela não consegue provar que um servidor recebeu ou armazenou um arquivo, detectar roubo de senhas ou cookies por malware, detectar acesso a uma conta feito em outro dispositivo, observar atividades anteriores à instalação ou substituir antivírus e ferramentas de segurança do sistema operacional. A classificação de downloads é heurística: risco alto significa que existem sinais relevantes, não que malware foi confirmado.
 
+### Guardian Risk Engine v2 para extensões
+
+A auditoria separa **Capability Risk** (o poder técnico concedido pelas permissões) de **Behavior Risk** (sinais incomuns para a categoria funcional e mudanças desde a baseline). Ambos usam a escala 0–100: muito baixo (0–19), baixo (20–39), moderado (40–59), alto (60–79) e crítico (80–100). Capacidade elevada não indica intenção maliciosa.
+
+Os pesos base de capacidade são: `storage` 2, `activeTab` 3, `tabs` 7, `downloads.open` e `clipboardWrite` 8, `downloads`, `privacy`, `geolocation` e `webRequest` 10, `cookies`, `clipboardRead` e `declarativeNetRequest` 12, `webRequestBlocking` 14, `scripting` e `declarativeNetRequestWithHostAccess` 16, `history`, `management` e `<all_urls>` 18, `proxy` 25, `nativeMessaging` 35 e `debugger` 42. Combinações adicionam capacidade quando ampliam controle ou superfície de acesso.
+
+O Behavior Risk usa uma matriz central de compatibilidade (`esperada` 0, `possível` 2, `incomum` 9 e `muito incomum` 18), combinações fora de contexto, origem de instalação observável, estado da extensão e Permission Drift. Perfis funcionais nunca são concedidos apenas pelo nome: categorias sensíveis exigem também uma assinatura coerente de permissões. Quando faltam descrição, categoria, origem observável ou baseline, a confiança é reduzida.
+
+A baseline guarda versão, permissões, hosts e a análise anterior. Deltas de 0–9 são pequenos, 10–24 relevantes e 25 ou mais significativos. O score legado usado no histórico de extensões corresponde ao Behavior Risk, priorizando sinais contextuais em vez de poder técnico isolado.
+
 ## Risk Replay
 
 O Risk Replay transforma eventos de risco já armazenados em incidentes visuais. Nenhum dado adicional é coletado ou persistido para realizar o agrupamento.

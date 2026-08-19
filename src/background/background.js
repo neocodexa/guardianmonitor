@@ -299,20 +299,22 @@ function sanitizeExtensionSnapshot(ext) {
   return {
     id: cleanText(source.id, 64),
     name: cleanText(source.name || source.id || "Extensão", 160),
+    description: cleanText(source.description, 500),
     version: cleanText(source.version, 40),
     enabled: Boolean(source.enabled),
     type: cleanText(source.type || "extension", 40),
     installType: cleanText(source.installType || "normal", 40),
+    mayDisable: Boolean(source.mayDisable),
     permissions: sanitizePermissionList(source.permissions),
     hostPermissions: sanitizePermissionList(source.hostPermissions)
   };
 }
 
-function extensionRisk(ext) {
+function extensionRisk(ext, baseline = null) {
   const riskyPermissions = (ext.permissions || []).filter(permission => RISKY_PERMISSIONS.has(permission));
   const broadHosts = (ext.hostPermissions || []).filter(host => host === "<all_urls>" || host.includes("*://*/*") || host.includes("http://*/*") || host.includes("https://*/*"));
   const credentialPermissions = (ext.permissions || []).filter(permission => CREDENTIAL_PERMISSIONS.has(permission));
-  const assessed = GuardianRiskEngine.analyzeExtension(ext, { baselineKnown: true });
+  const assessed = GuardianRiskEngine.analyzeExtension(ext, { baseline, baselineKnown: Boolean(baseline) });
   return { ...assessed, riskyPermissions, broadHosts, credentialPermissions, credentialScore: assessed.score };
 }
 
@@ -327,7 +329,7 @@ async function getExtensions() {
 }
 
 async function recordSecurityEvent(type, ext, note, severity = "info", risk = null) {
-  await saveEvent({ type, severity, extension: ext, note, riskScore: risk?.score, riskLevel: risk?.level, riskReasons: risk?.reasons, riskEngineVersion: risk?.riskEngineVersion });
+  await saveEvent({ type, severity, extension: ext, note, riskScore: risk?.behavior?.score ?? risk?.score, riskLevel: risk?.behavior?.level ?? risk?.level, riskReasons: risk?.behavior?.reasons ?? risk?.reasons, capabilityRisk: risk?.capability, behaviorRisk: risk?.behavior, riskConfidence: risk?.confidence, riskDrift: risk?.drift, riskDelta: risk?.riskDelta, riskEngineVersion: risk?.riskEngineVersion });
 }
 
 async function securityAlert(title, ext, detail) {
@@ -341,7 +343,7 @@ async function securityAlert(title, ext, detail) {
 async function initializeBaseline(silent = true) {
   if (!(await hasManagementPermission())) return [];
   const extensions = await getExtensions();
-  const baseline = Object.fromEntries(extensions.filter(ext => ext.id).map(ext => [ext.id, ext]));
+  const baseline = Object.fromEntries(extensions.filter(ext => ext.id).map(ext => { const risk = GuardianRiskEngine.analyzeExtension(ext, {}); return [ext.id, { ...ext, risk }]; }));
   await chrome.storage.local.set({ extensionBaseline: baseline, lastSecurityAudit: Date.now() });
   if (!silent) await saveEvent({ type: "security_audit", severity: "info", note: `Auditoria concluída: ${extensions.length} extensões verificadas.` });
   return extensions;
@@ -355,8 +357,9 @@ async function auditExtensions({ alertChanges = true, recordAudit = true } = {})
   if (!(await hasManagementPermission())) return { current: [], findings: [], permissionRequired: true };
   const { extensionBaseline = null } = await chrome.storage.local.get("extensionBaseline");
   const current = await getExtensions();
-  const currentMap = Object.fromEntries(current.filter(ext => ext.id).map(ext => [ext.id, ext]));
+  const currentMap = {};
   if (!extensionBaseline || typeof extensionBaseline !== "object") {
+    for (const ext of current) currentMap[ext.id] = { ...ext, risk: GuardianRiskEngine.analyzeExtension(ext, {}) };
     await chrome.storage.local.set({ extensionBaseline: currentMap, lastSecurityAudit: Date.now() });
     if (recordAudit) await saveEvent({ type: "security_audit", severity: "info", note: `Linha de base criada com ${current.length} extensões.` });
     return { current, findings: [] };
@@ -366,7 +369,8 @@ async function auditExtensions({ alertChanges = true, recordAudit = true } = {})
     const old = extensionBaseline[ext.id];
     const newPermissions = old ? arrayDiff(ext.permissions, old.permissions) : ext.permissions;
     const newHosts = old ? arrayDiff(ext.hostPermissions, old.hostPermissions) : ext.hostPermissions;
-    const risk = GuardianRiskEngine.analyzeExtension(ext, { baselineKnown: Boolean(old), isNew: !old, newPermissions: [...newPermissions, ...newHosts], recentlyEnabled: Boolean(old && !old.enabled && ext.enabled), versionChanged: Boolean(old && old.version !== ext.version) });
+    const risk = GuardianRiskEngine.analyzeExtension(ext, { baseline: old, baselineKnown: Boolean(old), isNew: !old, recentlyEnabled: Boolean(old && !old.enabled && ext.enabled), versionChanged: Boolean(old && old.version !== ext.version) });
+    currentMap[ext.id] = { ...ext, risk };
     if (!old) {
       const permissions = [...ext.permissions.filter(permission => RISKY_PERMISSIONS.has(permission)), ...ext.hostPermissions.filter(host => host.includes("*"))].slice(0, 12).join(", ");
       findings.push({ type: risk.score >= 60 ? "credential_extension_risk" : "extension_new", ext, severity: risk.level === "low" ? "info" : risk.level, risk, detail: permissions ? `nova extensão; permissões de atenção: ${permissions}` : "nova extensão instalada" });
@@ -523,7 +527,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     hasManagementPermission()
       .then(async auditEnabled => {
         const extensions = auditEnabled ? await getExtensions() : [];
-        sendResponse({ ok: true, auditEnabled, extensions: extensions.map(ext => ({ ...ext, risk: extensionRisk(ext) })) });
+        const { extensionBaseline = {} } = auditEnabled ? await chrome.storage.local.get("extensionBaseline") : {};
+        sendResponse({ ok: true, auditEnabled, extensions: extensions.map(ext => ({ ...ext, risk: extensionRisk(ext, extensionBaseline?.[ext.id] || null) })) });
       })
       .catch(() => sendResponse({ ok: false, error: "Falha ao consultar extensões" }));
     return true;

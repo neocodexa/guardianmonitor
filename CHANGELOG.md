@@ -28,6 +28,11 @@
 
 ## Próxima versão
 
+- Evolui a auditoria para o Guardian Risk Engine v2, separando Capability Risk e Behavior Risk.
+- Adiciona classificação funcional contextual, matriz de compatibilidade, combinações de permissões, confiança e proteção contra perfis concedidos apenas pelo nome.
+- Adiciona Permission Drift e Risk Delta à baseline local, preservando eventos históricos.
+- Atualiza a auditoria com duas pontuações e painel explicável em português, inglês e espanhol.
+
 - Adiciona o Guardian Risk Engine com pontuações padronizadas de 0 a 100.
 - Integra análise heurística de downloads, extensões e formulários de credenciais.
 - Adiciona os níveis `low`, `guarded`, `medium`, `high` e `critical`.

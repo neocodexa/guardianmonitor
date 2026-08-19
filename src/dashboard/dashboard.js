@@ -29,6 +29,10 @@ Object.assign(I18N.en,{
 Object.assign(I18N.es,{
   navReplay:"Risk Replay",titleReplay:"Risk Replay",riskReplay:"Risk Replay",replayDescription:"Reconstruye incidentes probables usando solamente eventos ya almacenados localmente.",period:"Período",last24Hours:"Últimas 24 h",last7Days:"7 días",last30Days:"30 días",noIncidents:"No se encontraron incidentes en este período.",incident:"Incidente",eventsCount:"eventos",duration:"duración",replayIncident:"Reproducir incidente",timeline:"Línea de tiempo",whyScore:"¿Por qué este incidente recibió esta puntuación?",known:"Lo que sabemos",unknown:"Lo que no sabemos",knownEvents:"Estos eventos fueron observados por Guardian Monitor.",knownTime:"Los eventos agrupados ocurrieron cerca en el tiempo o comparten señales.",knownSignals:"Determinados metadatos fueron clasificados como riesgo.",unknownExecuted:"No sabemos si se ejecutó un archivo descargado.",unknownCausal:"No sabemos si los eventos tienen una relación causal.",unknownCompromise:"No sabemos si hubo un compromiso real.",exportIncidentJson:"Exportar incidente JSON",exportIncidentHtml:"Exportar informe HTML",closeReplay:"Cerrar",derivedIncident:"Agrupación derivada del historial",storedIncident:"Agrupación identificada en los eventos",relation:"Relación con el evento anterior",relationStart:"Evento inicial del incidente.",relationIncidentId:"Mismo identificador de incidente.",relationDomain:"Dominio igual o relacionado.",relationItem:"Mismo elemento observado.",relationExtension:"Misma extensión.",relationTime:"Ocurrieron cerca en el tiempo",seconds:"segundos",noExplanation:"No se registró una explicación adicional.",incidentScoreMethod:"La puntuación combina los riesgos de los eventos con peso decreciente, sin afirmar causalidad.",reportPrivacy:"Informe creado localmente solo con eventos ya almacenados."
 });
+Object.assign(I18N["pt-BR"],{capabilityRisk:"Capacidade",behaviorRisk:"Comportamento",confidence:"Confiança",detectedCategory:"Categoria detectada",sensitivePermissions:"Permissões sensíveis",analysisReasons:"Motivos da análise",permissionDrift:"Mudança de permissões",noDrift:"Nenhuma mudança recente de permissão",viewAnalysis:"Ver análise",closeAnalysis:"Fechar análise",unknownCategory:"Outra / desconhecida",capabilityMeaning:"O que a extensão pode fazer tecnicamente.",behaviorMeaning:"Sinais incomuns no contexto e desde a baseline.",analysisCaution:"Capacidade não é intenção. Esta análise heurística não confirma malware.",addedPermissions:"Novas permissões",addedHosts:"Novos acessos",riskDelta:"Mudança de risco"});
+Object.assign(I18N.en,{capabilityRisk:"Capability",behaviorRisk:"Behavior",confidence:"Confidence",detectedCategory:"Detected category",sensitivePermissions:"Sensitive permissions",analysisReasons:"Analysis reasons",permissionDrift:"Permission change",noDrift:"No recent permission changes",viewAnalysis:"View analysis",closeAnalysis:"Close analysis",unknownCategory:"Other / unknown",capabilityMeaning:"What the extension can technically do.",behaviorMeaning:"Unusual signals in context and since the baseline.",analysisCaution:"Capability is not intent. This heuristic analysis does not confirm malware.",addedPermissions:"New permissions",addedHosts:"New access",riskDelta:"Risk change"});
+Object.assign(I18N.es,{capabilityRisk:"Capacidad",behaviorRisk:"Comportamiento",confidence:"Confianza",detectedCategory:"Categoría detectada",sensitivePermissions:"Permisos sensibles",analysisReasons:"Motivos del análisis",permissionDrift:"Cambio de permisos",noDrift:"Sin cambios recientes de permisos",viewAnalysis:"Ver análisis",closeAnalysis:"Cerrar análisis",unknownCategory:"Otra / desconocida",capabilityMeaning:"Lo que la extensión puede hacer técnicamente.",behaviorMeaning:"Señales inusuales en contexto y desde la línea base.",analysisCaution:"Capacidad no es intención. Este análisis heurístico no confirma malware.",addedPermissions:"Nuevos permisos",addedHosts:"Nuevos accesos",riskDelta:"Cambio de riesgo"});
+
 const REASON_MESSAGES={
   en:{executable_type:"The file type can execute code.",archive_type:"The archive may contain other files.",double_extension:"The file has a potentially misleading double extension.",unencrypted_http:"The download originated over unencrypted HTTP.",encrypted_https:"The download originated over HTTPS.",mime_mismatch:"The MIME type does not appear to match the extension.",deceptive_name:"The filename may be misleading.",combo_cookies_all_urls:"Cookies combined with broad site access deserve review.",combo_scripting_all_urls:"Scripts combined with broad site access increase capability.",combo_credentials_pages:"The combination enables broad interaction with pages and sessions.",combo_proxy_requests:"Proxy combined with request observation deserves review.",context_new:"The extension is new compared with the local baseline.",context_new_permissions:"The extension received new permissions.",context_enabled:"The extension was recently enabled.",context_version_changed:"The extension version changed.",context_stable_baseline:"The extension is known and unchanged in the local baseline.",page_http:"The page containing the password form uses unencrypted HTTP.",action_http:"The form submits over unencrypted HTTP.",cross_domain_action:"The destination differs from the page domain.",ip_target:"The form points to an IP address.",punycode_domain:"The destination uses a Punycode internationalized domain.",iframe_form:"The password form is inside an iframe.",unknown_target:"The destination domain could not be validated.",multiple_credential_signals:"Multiple potential exposure signals were observed together."},
   es:{executable_type:"El tipo de archivo puede ejecutar código.",archive_type:"El archivo comprimido puede contener otros archivos.",double_extension:"El archivo tiene una doble extensión potencialmente engañosa.",unencrypted_http:"La descarga se originó mediante HTTP sin cifrar.",encrypted_https:"La descarga se originó mediante HTTPS.",mime_mismatch:"El tipo MIME no parece coincidir con la extensión.",deceptive_name:"El nombre del archivo puede ser engañoso.",combo_cookies_all_urls:"Las cookies combinadas con acceso amplio a sitios merecen revisión.",combo_scripting_all_urls:"Los scripts combinados con acceso amplio aumentan la capacidad.",combo_credentials_pages:"La combinación permite una interacción amplia con páginas y sesiones.",combo_proxy_requests:"El proxy combinado con la observación de solicitudes merece revisión.",context_new:"La extensión es nueva respecto a la línea base local.",context_new_permissions:"La extensión recibió nuevos permisos.",context_enabled:"La extensión fue activada recientemente.",context_version_changed:"La versión de la extensión cambió.",context_stable_baseline:"La extensión es conocida y no cambió en la línea base local.",page_http:"La página con el formulario de contraseña usa HTTP sin cifrar.",action_http:"El formulario se envía mediante HTTP sin cifrar.",cross_domain_action:"El destino difiere del dominio de la página.",ip_target:"El formulario apunta a una dirección IP.",punycode_domain:"El destino usa un dominio internacionalizado Punycode.",iframe_form:"El formulario de contraseña está dentro de un iframe.",unknown_target:"No se pudo validar el dominio de destino.",multiple_credential_signals:"Se observaron juntas varias señales de posible exposición."}
@@ -116,6 +120,13 @@ function reasonText(reason) {
   if (currentLanguage !== "pt-BR") {
     if (String(reason.id).startsWith("chromium_")) message = `Chromium: ${String(reason.id).slice(9)}`;
     else if (String(reason.id).startsWith("permission_")) message = `${currentLanguage === "es" ? "Permiso con capacidad relevante" : "Permission with relevant capability"}: ${message.split(":").at(-1).trim()}`;
+    else if (String(reason.id).startsWith("capability_")) message = currentLanguage === "es" ? `Capacidad técnica: ${message.split("por ").at(-1)}` : `Technical capability: ${message.split("por ").at(-1)}`;
+    else if (String(reason.id).startsWith("compatibility_")) message = currentLanguage === "es" ? "El permiso es inusual para la categoría detectada." : "The permission is unusual for the detected category.";
+    else if (String(reason.id).startsWith("combination_")) message = currentLanguage === "es" ? "Esta combinación de permisos amplía el acceso y merece contexto." : "This permission combination expands access and needs context.";
+    else if (reason.id === "context_new_hosts") message = currentLanguage === "es" ? "El acceso a sitios se amplió desde la última auditoría." : "Site access expanded since the last audit.";
+    else if (reason.id === "context_browser_disabled") message = currentLanguage === "es" ? "El navegador desactivó la extensión o no puede activarse normalmente." : "The browser disabled the extension or it cannot be enabled normally.";
+    else if (reason.id === "context_non_store") message = currentLanguage === "es" ? "El origen de instalación no corresponde al flujo normal de la tienda." : "The installation source does not match the normal store flow.";
+    else if (reason.id === "context_compatible") message = currentLanguage === "es" ? "Los permisos son compatibles con la función detectada." : "The permissions are compatible with the detected function.";
     else message = REASON_MESSAGES[currentLanguage]?.[reason.id] || message;
   }
   return `${Number.isFinite(points) && points >= 0 ? `+${points} ` : ""}${message}`.trim();
@@ -429,14 +440,20 @@ function riskNode(score) {
   return element("span", level === "low" ? "ok" : ["high", "critical"].includes(level) ? "risk high" : "risk", `${score}/100 · ${t(labels[level])}`);
 }
 
+function extensionRiskNode(assessment) {
+  const score=assessment?.score||0,band=assessment?.band||"very_low";
+  const labels={"pt-BR":{very_low:"Muito baixo",low:"Baixo",moderate:"Moderado",high:"Alto",critical:"Crítico"},en:{very_low:"Very low",low:"Low",moderate:"Moderate",high:"High",critical:"Critical"},es:{very_low:"Muy bajo",low:"Bajo",moderate:"Moderado",high:"Alto",critical:"Crítico"}};
+  return element("span",["high","critical"].includes(band)?"risk high":band==="very_low"?"ok":"risk",`${score}/100 · ${labels[currentLanguage]?.[band]||band}`);
+}
+
 function renderExtensions() {
   const body = $("#extensionRows");
   clear(body);
-  const sorted = [...browserExtensions].sort((a, b) => (b.risk?.score || 0) - (a.risk?.score || 0) || String(a.name).localeCompare(String(b.name)));
+  const sorted = [...browserExtensions].sort((a, b) => (b.risk?.behavior?.score || 0) - (a.risk?.behavior?.score || 0) || (b.risk?.capability?.score || 0) - (a.risk?.capability?.score || 0) || String(a.name).localeCompare(String(b.name)));
   if (!sorted.length) {
     const tr = element("tr");
     const td = element("td", "empty", t("noneExtension"));
-    td.colSpan = 6;
+    td.colSpan = 7;
     tr.append(td);
     body.append(tr);
     return;
@@ -447,6 +464,10 @@ function renderExtensions() {
     nameCell.append(element("strong", "", extension.name || "Extensão"));
     nameCell.append(document.createElement("br"));
     nameCell.append(element("small", "", extension.id || ""));
+    const detailButton = element("button", "analysis-link", t("viewAnalysis"));
+    detailButton.type = "button";
+    detailButton.addEventListener("click", () => renderExtensionRiskDetail(extension));
+    nameCell.append(document.createElement("br"), detailButton);
     tr.append(nameCell);
     tr.append(cell(extension.version || "—"));
     const stateCell = element("td");
@@ -458,10 +479,14 @@ function renderExtensions() {
     if (!attention.length) permissionsCell.append(element("span", "neutral", t("noneHighlighted")));
     else attention.forEach(permission => permissionsCell.append(element("span", "perm", permission)));
     tr.append(permissionsCell);
-    const riskCell = element("td");
-    const score = extension.risk?.score || 0;
-    riskCell.append(riskNode(score));
-    tr.append(riskCell);
+    const capabilityCell = element("td");
+    capabilityCell.append(extensionRiskNode(extension.risk?.capability));
+    capabilityCell.title = (extension.risk?.capability?.reasons || []).map(reason => reason.message).join("\n");
+    tr.append(capabilityCell);
+    const behaviorCell = element("td");
+    behaviorCell.append(extensionRiskNode(extension.risk?.behavior));
+    behaviorCell.title = (extension.risk?.behavior?.reasons || []).map(reason => reason.message).join("\n");
+    tr.append(behaviorCell);
     body.append(tr);
   });
 }
@@ -520,6 +545,23 @@ async function loadExtensions() {
     ? `${t("lastAudit")}: ${new Date(lastSecurityAudit).toLocaleString(locale())}. ${browserExtensions.length} ${t("extensionsChecked")}.`
     : `${browserExtensions.length} ${t("extensionsChecked")}.`;
 }
+
+function renderExtensionRiskDetail(extension) {
+  const panel = $("#extensionRiskDetail"), risk = extension.risk || {}, capability = risk.capability || {score:0,level:"low",reasons:[]}, behavior = risk.behavior || {score:0,level:"low",reasons:[]};
+  clear(panel); panel.hidden = false;
+  const header = element("div","risk-detail-head");
+  header.append(element("h3","",extension.name || t("extension")));
+  const close = element("button","",t("closeAnalysis")); close.type="button"; close.addEventListener("click",()=>{panel.hidden=true}); header.append(close); panel.append(header);
+  const scores = element("div","risk-detail-scores");
+  [["capabilityRisk",capability,"capabilityMeaning"],["behaviorRisk",behavior,"behaviorMeaning"]].forEach(([label,item,meaning])=>{const card=element("section","risk-score-card");card.append(element("span","",t(label)),element("strong","",`${item.score}/100`),extensionRiskNode(item),element("p","",t(meaning)));scores.append(card)});
+  const confidence=element("section","risk-score-card");confidence.append(element("span","",t("confidence")),element("strong","",`${risk.confidence||0}%`),element("p","",`${t("detectedCategory")}: ${risk.category?.id==="other"?t("unknownCategory"):risk.category?.id||t("unknownCategory")}`));scores.append(confidence);panel.append(scores);
+  const permissions=[...(risk.permissions?.sensitive||[]),...(risk.permissions?.unusual||[]),...(risk.permissions?.critical||[])];
+  const permissionSection=element("section","risk-detail-section");permissionSection.append(element("h4","",t("sensitivePermissions")));const chips=element("div","wrap");(permissions.length?permissions:[t("noneHighlighted")]).forEach(item=>chips.append(element("span",permissions.length?"perm":"neutral",item)));permissionSection.append(chips);panel.append(permissionSection);
+  const reasonSection=element("section","risk-detail-section");reasonSection.append(element("h4","",t("analysisReasons")));const reasons=element("ul");[...(capability.reasons||[]),...(behavior.reasons||[])].forEach(item=>reasons.append(element("li","",item.message)));reasonSection.append(reasons);panel.append(reasonSection);
+  const drift=element("section","risk-detail-section");drift.append(element("h4","",t("permissionDrift")));if(!risk.drift?.detected)drift.append(element("p","",t("noDrift")));else{if(risk.drift.addedPermissions?.length)drift.append(element("p","",`${t("addedPermissions")}: ${risk.drift.addedPermissions.join(", ")}`));if(risk.drift.addedHosts?.length)drift.append(element("p","",`${t("addedHosts")}: ${risk.drift.addedHosts.join(", ")}`));drift.append(element("p","",`${t("riskDelta")}: ${t("capabilityRisk")} ${formatDelta(risk.riskDelta?.capability)}, ${t("behaviorRisk")} ${formatDelta(risk.riskDelta?.behavior)}`))}panel.append(drift,element("p","analysis-caution",t("analysisCaution")));panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function formatDelta(value) { const number=Number(value)||0; return `${number>=0?"+":""}${number}`; }
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
