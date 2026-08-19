@@ -41,8 +41,18 @@ aside .brand-logo {
 }
 
 .popup .github-link {
-  margin-top: 8px;
   color: #718096;
+}
+
+.popup-credit {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.popup-credit .creditline {
+  margin: 0;
 }
 
 .credit .github-link {
