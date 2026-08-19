@@ -32,6 +32,8 @@
 - Adiciona classificação funcional contextual, matriz de compatibilidade, combinações de permissões, confiança e proteção contra perfis concedidos apenas pelo nome.
 - Adiciona Permission Drift e Risk Delta à baseline local, preservando eventos históricos.
 - Atualiza a auditoria com duas pontuações e painel explicável em português, inglês e espanhol.
+- Corrige o falso positivo que tratava categoria desconhecida como permissões incompatíveis.
+- Adiciona classificação ponderada por evidências, hosts internos neutros e limite para bônus de combinações, evitando contagem dupla.
 
 - Adiciona o Guardian Risk Engine com pontuações padronizadas de 0 a 100.
 - Integra análise heurística de downloads, extensões e formulários de credenciais.

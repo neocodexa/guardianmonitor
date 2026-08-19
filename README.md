@@ -86,7 +86,9 @@ A auditoria separa **Capability Risk** (o poder técnico concedido pelas permiss
 
 Os pesos base de capacidade são: `storage` 2, `activeTab` 3, `tabs` 7, `downloads.open` e `clipboardWrite` 8, `downloads`, `privacy`, `geolocation` e `webRequest` 10, `cookies`, `clipboardRead` e `declarativeNetRequest` 12, `webRequestBlocking` 14, `scripting` e `declarativeNetRequestWithHostAccess` 16, `history`, `management` e `<all_urls>` 18, `proxy` 25, `nativeMessaging` 35 e `debugger` 42. Combinações adicionam capacidade quando ampliam controle ou superfície de acesso.
 
-O Behavior Risk usa uma matriz central de compatibilidade (`esperada` 0, `possível` 2, `incomum` 9 e `muito incomum` 18), combinações fora de contexto, origem de instalação observável, estado da extensão e Permission Drift. Perfis funcionais nunca são concedidos apenas pelo nome: categorias sensíveis exigem também uma assinatura coerente de permissões. Quando faltam descrição, categoria, origem observável ou baseline, a confiança é reduzida.
+O Behavior Risk usa estados contextuais `expected`, `reasonable`, `neutral`, `unusual`, `critical` e `unknown`, além de combinações fora de contexto, origem de instalação observável, estado da extensão e Permission Drift. `Unknown` é neutro: reduz a confiança, mas não é convertido em incompatibilidade. Perfis funcionais nunca são concedidos apenas pelo nome; a classificação acumula evidências textuais, assinatura técnica de permissões e hosts.
+
+Para evitar contagem dupla e saturação precoce, permissões formam o score base de Capability e todas as combinações juntas podem adicionar no máximo 12 pontos. Hosts internos como `edge://favicon/*` e `chrome://favicon/*` são técnicos, têm peso zero e não participam de Behavior Risk ou Permission Drift. Hosts web amplos continuam sendo representados por `<all_urls>`.
 
 A baseline guarda versão, permissões, hosts e a análise anterior. Deltas de 0–9 são pequenos, 10–24 relevantes e 25 ou mais significativos. O score legado usado no histórico de extensões corresponde ao Behavior Risk, priorizando sinais contextuais em vez de poder técnico isolado.
 

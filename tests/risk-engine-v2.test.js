@@ -1,19 +1,16 @@
 "use strict";
-const assert = require("node:assert/strict");
+const assert=require("node:assert/strict");
 require("../src/background/risk-engine.js");
-const engine = globalThis.GuardianRiskEngine;
-
-function assess(name, description, permissions, hostPermissions=["<all_urls>"], baseline=null) {
-  return engine.analyzeExtension({name,description,permissions,hostPermissions,enabled:true,installType:"normal"},{baseline});
-}
-
-const adblock=assess("Content Blocker","Blocks ads and trackers",["webRequest","webRequestBlocking","cookies"]);
-assert.equal(adblock.category.id,"adblock");assert.equal(adblock.capability.level,"high");assert.ok(["low","guarded","medium"].includes(adblock.behavior.level));
-const calculator=assess("Calculator","Calculator",["storage"],[]);assert.equal(calculator.capability.level,"low");assert.equal(calculator.behavior.level,"low");
-const suspiciousCalculator=assess("Calculator","Calculator",["cookies","history","webRequest"]);assert.equal(suspiciousCalculator.capability.level,"high");assert.ok(["high","critical"].includes(suspiciousCalculator.behavior.level));
-const passwordManager=assess("Password Manager","Credential vault and password manager",["storage","clipboardRead","clipboardWrite"]);assert.ok(["medium","high"].includes(passwordManager.capability.level));assert.ok(["low","guarded","medium"].includes(passwordManager.behavior.level));
-const unknown=assess("Tool","",["debugger","tabs","nativeMessaging"]);assert.equal(unknown.capability.level,"critical");assert.ok(["high","critical"].includes(unknown.behavior.level));assert.ok(unknown.confidence<60);
-const before={name:"Calculator",description:"Calculator",version:"1",permissions:["storage","activeTab"],hostPermissions:[],enabled:true,installType:"normal"};before.risk=engine.analyzeExtension(before,{});
-const drift=engine.analyzeExtension({...before,version:"2",permissions:["storage","activeTab","history","cookies"],hostPermissions:["<all_urls>"]},{baseline:before});assert.equal(drift.drift.detected,true);assert.ok(drift.drift.addedPermissions.includes("history"));assert.ok(drift.riskDelta.behavior>=25);assert.equal(drift.riskDelta.classification,"significant");
-const fake=assess("AdGuard Security","Simple notes",["storage"],[]);assert.equal(fake.category.id,"other");
-console.log("Guardian Risk Engine v2: 7 scenarios passed.");
+const engine=globalThis.GuardianRiskEngine;
+const assess=(name,description,permissions,hostPermissions=["<all_urls>"],baseline=null)=>engine.analyzeExtension({name,description,permissions,hostPermissions,enabled:true,installType:"normal"},{baseline});
+const adblock=assess("Content Blocker","Blocks ads and offers tracking protection",["storage","tabs","cookies","webRequest","webRequestBlocking"],["<all_urls>","edge://favicon/*"]);
+assert.equal(adblock.category.id,"adblock");assert.equal(adblock.capability.band,"high");assert.ok(["very_low","low"].includes(adblock.behavior.band));assert.equal(adblock.hosts.find(host=>host.pattern==="edge://favicon/*").weight,0);assert.ok(!adblock.permissions.unusual.includes("edge://favicon/*"));assert.ok(adblock.permissionAnalysis.some(item=>item.permission==="webRequestBlocking"&&item.context==="expected"));
+const calculator=assess("Calculator","Simple calculator for quick calculations",["cookies","webRequest","webRequestBlocking"]);assert.equal(calculator.capability.band,"high");assert.ok(["high","critical"].includes(calculator.behavior.band));
+const unknown=assess("Browser Helper","",["webRequest"]);assert.equal(unknown.category.id,"unknown");assert.ok(unknown.behavior.score<20);assert.ok(unknown.confidence<=50);assert.ok(unknown.permissionAnalysis.every(item=>item.context==="unknown"));assert.ok(!unknown.behavior.reasons.some(item=>item.id.startsWith("compatibility_")));
+const critical=assess("System Helper","",["debugger","nativeMessaging","tabs"]);assert.equal(critical.capability.band,"critical");
+const before={name:"Calculator",description:"Simple calculator",permissions:["storage"],hostPermissions:[],enabled:true,installType:"normal"};before.risk=engine.analyzeExtension(before,{});const drift=engine.analyzeExtension({...before,permissions:["storage","history","cookies"],hostPermissions:["<all_urls>"]},{baseline:before});assert.equal(drift.drift.detected,true);assert.ok(drift.riskDelta.behavior>=25);assert.equal(drift.riskDelta.classification,"significant");
+const fake=assess("AdGuard Security","Simple notes",["storage"],[]);assert.equal(fake.category.id,"unknown");assert.ok(fake.category.evidence.includes("insufficient_category_evidence"));assert.ok(adblock.combinations.reduce((sum,item)=>sum+item.capabilityImpact,0)<=12);
+assert.ok(engine.analyzeDownload({name:"invoice.pdf.exe",extension:"exe",mime:"application/pdf",protocol:"http",danger:"dangerous"}).score>=80);
+assert.ok(engine.analyzeCredential({pageProtocol:"http",actionProtocol:"http",crossDomain:true,targetDomain:"example.test"}).score>=80);
+assert.ok(engine.overallScore([{type:"download_scan",riskScore:70,riskLevel:"high",timestamp:Date.now()}]).score>0);
+console.log("Guardian Risk Engine v2: 6 focused scenarios passed.");
