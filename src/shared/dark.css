@@ -38,3 +38,9 @@ html[data-theme="dark"] .risk-hero { background: linear-gradient(135deg, #353b46
 html[data-theme="dark"] .security-item { background: #30353d; border-color: #4b525d; }
 html[data-theme="dark"] .security-item p { color: #bdc6d4; }
 html[data-theme="dark"] .security-item time { color: #98a3b4; }
+html[data-theme="dark"] .analysis-link { background: #424852; color: #e7ebf2; }
+html[data-theme="dark"] .extension-risk-detail { background: #343941; border-color: #4a505b; color: #edf1f7; }
+html[data-theme="dark"] .risk-score-card { background: #2c3037; border-color: #454b56; color: #edf1f7; }
+html[data-theme="dark"] .risk-score-card p { color: #adb7c7; }
+html[data-theme="dark"] .analysis-caution { background: #24354a; border: 1px solid #355070; color: #b8d6fc; }
+
